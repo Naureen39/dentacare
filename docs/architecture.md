@@ -21,7 +21,7 @@ In development the Vite dev server proxies `/api` and `/health` to the API conta
 ## Backend
 
 - `app/core`: settings (`pydantic-settings`), structured JSON logging, request ID middleware, uniform error handling.
-- `app/db`: async SQLAlchemy engine and session factory. Migrations are added in Phase 2.
+- `app/db`: async SQLAlchemy engine and session factory, declarative models in `models/`, native enums in `enums.py`, and Alembic migrations in `migrations/`. See [database.md](database.md).
 - `app/api`: unversioned operational routes (`/health`, `/ready`) and the versioned `/api/v1` router.
 - `app/jobs`: ARQ worker settings and tasks.
 

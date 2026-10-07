@@ -2,7 +2,7 @@
 
 Clinic website, online booking, patient portal, staff console, revenue and analytics dashboard, and a support and booking assistant. The clinic is fictional and this is a demo environment.
 
-The full build plan is in [plan (2).md](<plan (2).md>). This repository currently contains **Phase 1: Foundations**.
+The full build plan is in [plan (2).md](<plan (2).md>). This repository currently contains **Phase 1 (Foundations)** and **Phase 2 (Database schema and migrations)**.
 
 ## Quick start
 
@@ -29,6 +29,16 @@ The production profile adds Caddy with automatic TLS and security headers:
 ```bash
 SITE_ADDRESS=clinic.example.com docker compose --profile production up -d --build
 ```
+
+## Database
+
+```bash
+cd backend
+uv run alembic upgrade head     # create the schema in the Compose database
+uv run pytest tests/db          # constraint and migration tests (needs the db service)
+```
+
+See [docs/database.md](docs/database.md) for the schema, constraints and migration workflow.
 
 ## Development without Docker
 

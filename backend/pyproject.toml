@@ -15,6 +15,8 @@ dependencies = [
     "redis>=5.0",
     "arq>=0.26",
     "structlog>=24.4",
+    "pgvector>=0.5.0",
+    "tzdata>=2026.5",
 ]
 
 [dependency-groups]
@@ -37,6 +39,10 @@ line-length = 100
 target-version = "py312"
 extend-exclude = ["app/db/migrations"]
 
+[[tool.mypy.overrides]]
+module = ["asyncpg", "asyncpg.*", "pgvector.*"]
+ignore_missing_imports = true
+
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "S", "ASYNC", "SIM"]
 
@@ -48,6 +54,10 @@ python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy"]
 exclude = ["app/db/migrations"]
+
+[[tool.mypy.overrides]]
+module = ["asyncpg", "asyncpg.*", "pgvector.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

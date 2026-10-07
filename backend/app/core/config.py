@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     env: Literal["development", "test", "production"] = "development"
     log_level: str = "INFO"
 
-    database_url: str = "postgresql+asyncpg://meridian:meridian@localhost:5432/meridian"
+    database_url: str = "postgresql+asyncpg://meridian:meridian@127.0.0.1:5432/meridian"
     redis_url: str = "redis://localhost:6379/0"
 
     jwt_secret: str = "change-me-in-development-only"  # noqa: S105
