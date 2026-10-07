@@ -1,0 +1,151 @@
+name: meridian-dental
+
+x-backend-env: &backend-env
+  ENV: ${ENV:-development}
+  DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-meridian}:${POSTGRES_PASSWORD:-meridian}@db:5432/${POSTGRES_DB:-meridian}
+  REDIS_URL: redis://redis:6379/0
+  JWT_SECRET: ${JWT_SECRET:-change-me-in-development-only}
+  JWT_ACCESS_MINUTES: ${JWT_ACCESS_MINUTES:-15}
+  REFRESH_DAYS: ${REFRESH_DAYS:-14}
+  FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:-}
+  COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+  GROQ_API_KEY: ${GROQ_API_KEY:-}
+  GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-20b}
+  GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+  GEMINI_MODEL: ${GEMINI_MODEL:-}
+  LLM_PRIMARY: ${LLM_PRIMARY:-groq}
+  EMBED_MODEL: ${EMBED_MODEL:-BAAI/bge-small-en-v1.5}
+  SMTP_HOST: ${SMTP_HOST:-mailpit}
+  SMTP_PORT: ${SMTP_PORT:-1025}
+  SMTP_USER: ${SMTP_USER:-}
+  SMTP_PASS: ${SMTP_PASS:-}
+  CLINIC_TZ: ${CLINIC_TZ:-America/New_York}
+  CLINIC_NAME: ${CLINIC_NAME:-Meridian Dental Care}
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-meridian}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-meridian}
+      POSTGRES_DB: ${POSTGRES_DB:-meridian}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    logging: *logging
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    logging: *logging
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MAILPIT_UI_PORT:-8025}:8025"
+      - "127.0.0.1:${MAILPIT_SMTP_PORT:-1025}:1025"
+    logging: *logging
+
+  api:
+    build:
+      context: ../backend
+    restart: unless-stopped
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    environment:
+      <<: *backend-env
+    volumes:
+      - ../backend:/app
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    logging: *logging
+
+  worker:
+    build:
+      context: ../backend
+    restart: unless-stopped
+    command: ["arq", "app.jobs.worker.WorkerSettings"]
+    healthcheck:
+      test: ["CMD", "arq", "--check", "app.jobs.worker.WorkerSettings"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      <<: *backend-env
+    volumes:
+      - ../backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    logging: *logging
+
+  web:
+    build:
+      context: ../frontend
+      target: dev
+    restart: unless-stopped
+    environment:
+      VITE_API_PROXY_TARGET: http://api:8000
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ../frontend:/app
+      - web_node_modules:/app/node_modules
+    ports:
+      - "127.0.0.1:${WEB_PORT:-5173}:5173"
+    depends_on:
+      - api
+    logging: *logging
+
+  caddy:
+    profiles: ["production"]
+    build:
+      context: ../frontend
+      target: prod
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+    logging: *logging
+
+volumes:
+  pgdata:
+  web_node_modules:
+  caddy_data:
+  caddy_config:
