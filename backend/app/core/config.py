@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     gemini_model: str = ""
     llm_primary: Literal["groq", "gemini"] = "groq"
     embed_model: str = "BAAI/bge-small-en-v1.5"
+    embed_cache_dir: str = "models"
+    embed_preload: bool = True
+    kb_dir: str = "../data/kb"
+    intents_file: str = "../data/intents.yaml"
 
     smtp_host: str = "localhost"
     smtp_port: int = 1025

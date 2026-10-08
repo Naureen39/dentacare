@@ -2,7 +2,7 @@
 
 Clinic website, online booking, patient portal, staff console, revenue and analytics dashboard, and a support and booking assistant. The clinic is fictional and this is a demo environment.
 
-The full build plan is in [plan (2).md](<plan (2).md>). This repository currently contains **Phase 1 (Foundations)**, **Phase 2 (Database schema and migrations)** and **Phase 3 (Authentication, authorization and security baseline)** **Phase 4 (Core booking backend)** **Phase 5 (Billing and payments)** and **Phase 6 (Notifications and background jobs)**.
+The full build plan is in [plan (2).md](<plan (2).md>). This repository currently contains **Phase 1 (Foundations)**, **Phase 2 (Database schema and migrations)** and **Phase 3 (Authentication, authorization and security baseline)** **Phase 4 (Core booking backend)** **Phase 5 (Billing and payments)** **Phase 6 (Notifications and background jobs)** and **Phase 7 (Knowledge base and embeddings)**.
 
 ## Quick start
 
@@ -61,6 +61,10 @@ Invoices, discounts, sandbox card payments, PDFs and receivables aging are docum
 ## Notifications
 
 Reminder emails, confirm and cancel links and the nightly jobs are documented in [docs/notifications.md](docs/notifications.md).
+
+## Knowledge base
+
+68 documents in `data/kb` and the intent examples in `data/intents.yaml` are indexed with `uv run python -m scripts.embed_kb`. See [docs/knowledge-base.md](docs/knowledge-base.md) for the format, search behaviour, administration endpoints and quality gates.
 
 ## Development without Docker
 

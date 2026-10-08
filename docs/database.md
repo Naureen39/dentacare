@@ -70,3 +70,6 @@ Revision `0001` seeds `app_settings` with booking rules (minimum notice, horizon
 `tests/db` runs against a real PostgreSQL server (default `127.0.0.1:5432`, override with `TEST_DATABASE_URL`). The tests create and drop their own databases, `meridian_schema_test` and `meridian_migration_test`, so development data is never touched. They are skipped when no server is reachable, unless `REQUIRE_DB=1` is set, as it is in CI.
 
 Use `127.0.0.1` rather than `localhost` on Windows: resolving `localhost` first tries IPv6 and adds about a second to every connection.
+
+
+Revision `0006` adds `kb_documents.embedded_hash`, `embedded_at` and `managed_by`, and makes `(intent, text)` unique in `intent_examples`.

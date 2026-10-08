@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -16,6 +17,7 @@ from app.core.middleware import RequestIDMiddleware
 from app.core.security import PasswordService
 from app.core.security_headers import SecurityHeadersMiddleware
 from app.db.session import create_engine, create_session_factory
+from app.services.knowledge.embeddings import EmbeddingService
 from app.services.mailer import SmtpMailer
 from app.services.queue import ArqJobQueue
 
@@ -40,11 +42,29 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.passwords = PasswordService(cfg)
         app.state.mailer = SmtpMailer(cfg)
         app.state.jobs = ArqJobQueue(cfg.redis_url)
+        embedder = EmbeddingService(cfg.embed_model, cfg.embed_cache_dir, redis)
+        app.state.embedder = embedder
+        warm_up_task: asyncio.Task[None] | None = None
+        if cfg.embed_preload and cfg.env != "test":
+            # Load the model once, in the background, so startup (and health checks) never wait
+            # for a download. Searches made before it is ready simply wait for the same load.
+            # A failure, for example no network on first start, is logged and searches report
+            # 503 until a later attempt succeeds.
+            async def warm_up() -> None:
+                try:
+                    await embedder.warm_up()
+                except Exception:  # noqa: BLE001
+                    logger.error("embedding_model_preload_failed", model=cfg.embed_model)
+
+            warm_up_task = asyncio.create_task(warm_up())
         logger.info("startup_complete", env=cfg.env)
         try:
             yield
         finally:
+            if warm_up_task is not None:
+                warm_up_task.cancel()
             await app.state.jobs.close()
+            embedder.close()
             await redis.aclose()
             await engine.dispose()
             logger.info("shutdown_complete")

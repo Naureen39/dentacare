@@ -2,7 +2,17 @@ import uuid
 from datetime import datetime
 
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint, func
+from sqlalchemy import (
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+    func,
+    text,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, uuid_pk
@@ -20,6 +30,15 @@ class KbDocument(Base):
     body: Mapped[str] = mapped_column(Text, nullable=False)
     short_answer: Mapped[str | None] = mapped_column(Text)
     content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    # The hash of the content that the stored chunks were built from. A document is stale
+    # (needs re-embedding) while this differs from content_hash.
+    embedded_hash: Mapped[str | None] = mapped_column(String(64))
+    embedded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # "file" documents follow data/kb on every sync; "admin" documents were edited in the
+    # console and are left alone by the file sync unless it is forced.
+    managed_by: Mapped[str] = mapped_column(
+        String(10), server_default=text("'file'"), nullable=False
+    )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
@@ -50,6 +69,7 @@ class KbChunk(Base):
 class IntentExample(Base):
     __tablename__ = "intent_examples"
     __table_args__ = (
+        UniqueConstraint("intent", "text", name="uq_intent_examples_intent_text"),
         Index("ix_intent_examples_intent", "intent"),
         Index(
             "ix_intent_examples_embedding_hnsw",

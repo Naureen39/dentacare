@@ -10,6 +10,7 @@ from app.main import create_app
 from tests.auth.conftest import ctx  # noqa: F401
 from tests.booking.conftest import practice  # noqa: F401
 from tests.db.conftest import migrated_schema_db, postgres_available  # noqa: F401
+from tests.knowledge.conftest import fake_embedder  # noqa: F401
 
 
 class FakeRedis:

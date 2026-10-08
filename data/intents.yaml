@@ -1,0 +1,224 @@
+# Example utterances for intent routing in the chat assistant.
+# Each intent has 15 to 25 short messages. They are embedded once by scripts/embed_kb.py.
+# Held out test phrases live in backend/tests/knowledge and are never added here.
+
+greeting:
+  - hello
+  - hi
+  - hi there
+  - hey
+  - good morning
+  - good afternoon
+  - good evening
+  - hello, is anyone there
+  - hi, I have a question
+  - hey there
+  - greetings
+  - hello assistant
+  - hi, can you help me
+  - morning
+  - hello, I need some help
+
+hours:
+  - what are your opening hours
+  - when are you open
+  - what time do you open
+  - what time do you close
+  - are you open on saturday
+  - are you open on sunday
+  - what are your hours on friday
+  - do you open early in the morning
+  - how late are you open
+  - are you open today
+  - do you close for lunch
+  - what days are you open
+  - are you open on holidays
+  - what are your office hours
+  - when does the clinic close tonight
+
+location:
+  - where are you located
+  - what is your address
+  - how do I get to the clinic
+  - where is the dental office
+  - can you give me directions
+  - is there parking at the clinic
+  - where can I park
+  - which street are you on
+  - how do I find your office
+  - is the clinic near public transport
+  - what is the clinic's location
+  - where exactly is your practice
+  - do you have a map
+  - is your building wheelchair accessible
+  - which floor is the clinic on
+
+pricing:
+  - how much does a cleaning cost
+  - what is the price of a filling
+  - how much is a crown
+  - what do you charge for teeth whitening
+  - how much does a root canal cost
+  - what is the cost of an extraction
+  - how much are dental implants
+  - what are your prices
+  - how much is an emergency visit
+  - what does a check-up cost
+  - how much do clear aligners cost
+  - what is the fee for an exam
+  - can you give me a price estimate
+  - how expensive is a deep cleaning
+  - what does it cost to see the dentist
+
+insurance:
+  - do you accept my insurance
+  - which insurance plans do you take
+  - do you work with my insurance company
+  - do you take dental insurance
+  - will my insurance cover a cleaning
+  - can I use my insurance here
+  - do you bill insurance directly
+  - what if I do not have insurance
+  - are you in network
+  - do you accept medicaid
+  - can I pay with my HSA
+  - can I use my flexible spending account
+  - how do insurance claims work
+  - do you offer payment plans
+  - what payment methods do you accept
+
+book:
+  - I want to book an appointment
+  - can I make an appointment
+  - I would like to schedule a cleaning
+  - book me in for next week
+  - I need to see a dentist
+  - do you have any openings tomorrow
+  - what is your next available appointment
+  - can I book online
+  - I want to schedule a check-up
+  - please book a visit for me
+  - I'd like an appointment with a dentist
+  - are there any slots on friday
+  - I need a dentist appointment as soon as possible
+  - can I come in this week
+  - set up an appointment for my child
+
+reschedule:
+  - I need to reschedule my appointment
+  - can I move my appointment to another day
+  - change my appointment time
+  - I cannot make my appointment, can we pick another time
+  - can I switch my appointment to next week
+  - I want to rebook my visit
+  - move my appointment later
+  - can I come earlier than my booking
+  - how do I change my appointment
+  - I need a different time for my visit
+  - can you shift my appointment
+  - reschedule my cleaning please
+  - is it possible to postpone my appointment
+  - I'd like to change the date of my booking
+  - my appointment time no longer works for me
+
+cancel:
+  - I want to cancel my appointment
+  - cancel my booking
+  - please cancel my visit
+  - I can't come to my appointment
+  - how do I cancel an appointment
+  - what is your cancellation policy
+  - will I be charged if I cancel
+  - I need to cancel tomorrow's appointment
+  - cancel my cleaning
+  - I won't be able to attend
+  - how much notice do I need to cancel
+  - is there a fee for cancelling late
+  - remove my appointment from the schedule
+  - I would like to call off my appointment
+  - delete my booking
+
+faq_procedure:
+  - what happens during a root canal
+  - does a filling hurt
+  - how long does teeth whitening last
+  - what is a dental crown
+  - how long do implants take to heal
+  - what should I do after a tooth extraction
+  - is a deep cleaning painful
+  - how do clear aligners work
+  - are dental x-rays safe
+  - what is gum disease
+  - how often should I get a cleaning
+  - how do I prevent cavities
+  - why are my teeth sensitive
+  - how should I care for my child's teeth
+  - what can I eat after a filling
+
+emergency:
+  - I have a terrible toothache
+  - my tooth got knocked out
+  - I am bleeding and it will not stop
+  - my face is swollen
+  - I broke a tooth
+  - I need an emergency dentist
+  - I'm in severe pain
+  - my crown fell out and it hurts
+  - there is an abscess in my mouth
+  - I can't stop the bleeding after my extraction
+  - my jaw is swollen and I have a fever
+  - I hit my mouth and my tooth is loose
+  - do you do same day emergency appointments
+  - my filling came out and I'm in pain
+  - urgent dental problem
+
+human_handoff:
+  - I want to talk to a person
+  - can I speak to someone at the front desk
+  - connect me to a human
+  - let me talk to a real person
+  - I need to speak to a receptionist
+  - can someone call me back
+  - I'd like to speak with a staff member
+  - this is not helping, I need a person
+  - please have someone phone me
+  - can I talk to the office manager
+  - transfer me to the clinic
+  - I'd rather speak to someone directly
+  - is there a human I can chat with
+  - request a callback
+  - get me a team member
+
+thanks:
+  - thanks
+  - thank you
+  - thanks a lot
+  - thank you so much
+  - that's helpful, thanks
+  - great, thank you
+  - perfect, thanks
+  - cheers
+  - thanks for your help
+  - I appreciate it
+  - awesome, thanks
+  - many thanks
+  - that answers my question, thank you
+  - ok thanks
+  - brilliant, thank you
+
+out_of_scope:
+  - what is the weather like today
+  - tell me a joke
+  - who won the football game last night
+  - what is the capital of France
+  - can you write me a poem
+  - how do I bake a chocolate cake
+  - what is the stock market doing
+  - recommend a good movie
+  - help me with my homework
+  - what is two plus two
+  - translate this sentence into Spanish
+  - can you book me a flight
+  - who is the president
+  - what should I have for dinner
+  - tell me about the latest news

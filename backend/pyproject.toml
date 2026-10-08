@@ -26,6 +26,8 @@ dependencies = [
     "reportlab>=5.0.1",
     "jinja2>=3.1.6",
     "icalendar>=7.3.0",
+    "fastembed>=0.9.0",
+    "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]
@@ -40,6 +42,7 @@ dev = [
     "pip-audit>=2.7",
     "fakeredis>=2.39.0",
     "pypdf>=6.19.0",
+    "types-pyyaml>=6.0.12.20260906",
 ]
 
 [tool.uv]
@@ -56,7 +59,7 @@ select = ["E", "F", "I", "UP", "B", "S", "ASYNC", "SIM"]
 ignore = ["E501", "S105", "S106", "S107"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106", "S107", "S311"]
+"tests/**" = ["S101", "S105", "S106", "S107", "S311", "S608"]
 
 [tool.mypy]
 python_version = "3.12"

@@ -48,5 +48,8 @@ async def ready(request: Request) -> JSONResponse:
     db, cache = await asyncio.gather(_check_database(request), _check_redis(request))
     checks = {"database": db, "redis": cache}
     healthy = all(v == "ok" for v in checks.values())
+    # Informational only: the site works without the assistant's search while the model loads.
+    embedder = getattr(request.app.state, "embedder", None)
+    checks["embeddings"] = "ready" if embedder is not None and embedder.ready else "loading"
     body = ReadyResponse(status="ready" if healthy else "degraded", checks=checks)
     return JSONResponse(status_code=200 if healthy else 503, content=body.model_dump())

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
-from app.api.v1 import auth, billing, portal, public, records, staff
+from app.api.v1 import auth, billing, knowledge, portal, public, records, staff
 from app.core.config import Settings
 
 router = APIRouter()
@@ -11,6 +11,7 @@ router.include_router(public.router)
 router.include_router(portal.router)
 router.include_router(staff.router)
 router.include_router(billing.router)
+router.include_router(knowledge.router)
 
 
 class InfoResponse(BaseModel):

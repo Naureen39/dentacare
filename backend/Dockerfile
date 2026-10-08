@@ -16,7 +16,9 @@ RUN uv sync --frozen --no-install-project --no-dev
 
 COPY . .
 
-RUN useradd --create-home --uid 10001 appuser && chown -R appuser /app
+RUN useradd --create-home --uid 10001 appuser \
+    && mkdir -p /models \
+    && chown -R appuser /app /models
 USER appuser
 
 EXPOSE 8000

@@ -918,6 +918,99 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/kb/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Documents */
+        get: operations["list_documents_api_v1_admin_kb_documents_get"];
+        put?: never;
+        /** Create Document */
+        post: operations["create_document_api_v1_admin_kb_documents_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/kb/documents/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Document */
+        get: operations["get_document_api_v1_admin_kb_documents__slug__get"];
+        /** Update Document */
+        put: operations["update_document_api_v1_admin_kb_documents__slug__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/kb/documents/{slug}/reembed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reembed Document */
+        post: operations["reembed_document_api_v1_admin_kb_documents__slug__reembed_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/kb/reindex": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reindex
+         * @description Re-embed documents whose chunks are out of date, or every document with ``force``.
+         */
+        post: operations["reindex_api_v1_admin_kb_reindex_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/kb/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Preview Search
+         * @description What the assistant would retrieve for a question, with similarity scores.
+         */
+        get: operations["preview_search_api_v1_admin_kb_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/info": {
         parameters: {
             query?: never;
@@ -1484,6 +1577,87 @@ export interface components {
             /** Insurance Expected */
             insurance_expected?: number | string | null;
         };
+        /** KbDocumentCreate */
+        KbDocumentCreate: {
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Category */
+            category: string;
+            /** Body */
+            body: string;
+            /**
+             * Reembed
+             * @default true
+             */
+            reembed: boolean;
+        };
+        /** KbDocumentOut */
+        KbDocumentOut: {
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Category */
+            category: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Managed By */
+            managed_by: string;
+            /** Stale */
+            stale: boolean;
+            /** Chunks */
+            chunks: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Body */
+            body: string;
+            /** Short Answer */
+            short_answer: string | null;
+            /** Embedded At */
+            embedded_at: string | null;
+        };
+        /** KbDocumentSummary */
+        KbDocumentSummary: {
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Category */
+            category: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Managed By */
+            managed_by: string;
+            /** Stale */
+            stale: boolean;
+            /** Chunks */
+            chunks: number;
+        };
+        /** KbDocumentUpdate */
+        KbDocumentUpdate: {
+            /** Title */
+            title?: string | null;
+            /** Category */
+            category?: string | null;
+            /** Body */
+            body?: string | null;
+            /**
+             * Reembed
+             * @default true
+             */
+            reembed: boolean;
+        };
         /**
          * LinkAppointmentOut
          * @description The few appointment details shown to the holder of an email link.
@@ -1805,6 +1979,13 @@ export interface components {
              */
             marketing_consent: boolean;
         };
+        /** ReindexResult */
+        ReindexResult: {
+            /** Reembedded */
+            reembedded: string[];
+            /** Chunks Written */
+            chunks_written: number;
+        };
         /** ReminderOut */
         ReminderOut: {
             /**
@@ -1889,6 +2070,21 @@ export interface components {
             end: string;
             /** Appointments */
             appointments: components["schemas"]["StaffAppointmentOut"][];
+        };
+        /** SearchHitOut */
+        SearchHitOut: {
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+            /** Category */
+            category: string;
+            /** Score */
+            score: number;
+            /** Chunk Index */
+            chunk_index: number;
+            /** Text */
+            text: string;
         };
         /** ServiceOut */
         ServiceOut: {
@@ -4458,6 +4654,296 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ArAgingResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_documents_api_v1_admin_kb_documents_get: {
+        parameters: {
+            query?: {
+                category?: string | null;
+                q?: string | null;
+                stale_only?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KbDocumentSummary"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_document_api_v1_admin_kb_documents_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["KbDocumentCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KbDocumentOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_document_api_v1_admin_kb_documents__slug__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KbDocumentOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_document_api_v1_admin_kb_documents__slug__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["KbDocumentUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KbDocumentOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reembed_document_api_v1_admin_kb_documents__slug__reembed_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KbDocumentOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reindex_api_v1_admin_kb_reindex_post: {
+        parameters: {
+            query?: {
+                force?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReindexResult"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    preview_search_api_v1_admin_kb_search_get: {
+        parameters: {
+            query: {
+                q: string;
+                k?: number;
+                category?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchHitOut"][];
                 };
             };
             /** @description Unprocessable Entity */

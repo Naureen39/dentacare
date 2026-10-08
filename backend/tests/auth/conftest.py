@@ -27,6 +27,7 @@ STRONG_PASSWORD = "correct-horse-battery-staple-9"
 
 # Children first so foreign keys never block cleanup. app_settings is deliberately kept.
 CLEANUP_ORDER = [
+    "kb_chunks", "kb_documents", "intent_examples",
     "audit_logs", "llm_usage", "chat_messages", "chat_sessions", "payments", "invoice_items",
     "invoices", "appointment_action_tokens", "reminders", "appointment_status_history", "appointments", "dentist_services",
     "dentist_schedules", "schedule_exceptions", "patients", "dentists", "services",
