@@ -1,0 +1,18 @@
+{% extends "_base.txt.j2" %}
+{% block content %}Hello {{ first_name }},
+
+Your appointment is booked.
+
+{{ service }}
+With {{ dentist }}
+{{ when }}
+Where: {{ clinic_address }}
+
+A calendar file is attached so you can add the appointment to your calendar.
+
+{{ cancel_policy }}
+Cancel this appointment: {{ cancel_url }}
+Manage your appointments: {{ manage_url }}
+
+Questions? Call {{ clinic_phone }}.
+{% endblock %}

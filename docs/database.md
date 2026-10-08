@@ -22,13 +22,13 @@ Conventions used throughout:
 - All money columns are `numeric(12,2)`.
 - Constraint and index names follow a fixed naming convention (see `app/db/base.py`) so downgrades and later migrations are deterministic.
 - Enumerations are native PostgreSQL enum types. Each type is created and dropped explicitly in the revision that introduces it.
-- Sensitive personal fields (`*_enc`) are `text` columns holding application-level ciphertext, added in Phase 3.
+- Sensitive personal fields (`*_enc`) are `text` columns holding application-level ciphertext (`<key_id>:<base64url>`), written through `app/core/crypto.py`. See [security.md](security.md).
 
 ## Tables
 
 | Group | Tables |
 |---|---|
-| Identity | `users`, `refresh_tokens` |
+| Identity | `users`, `refresh_tokens`, `auth_tokens`, `mfa_recovery_codes` |
 | Clinic | `patients`, `dentists`, `dentist_schedules`, `schedule_exceptions`, `services`, `dentist_services`, `insurance_providers` |
 | Scheduling | `appointments`, `appointment_status_history`, `reminders` |
 | Billing | `invoices`, `invoice_items`, `payments` |
@@ -56,6 +56,12 @@ Conventions used throughout:
 Row level security is not used. Patient scoping is enforced in the service layer and covered by tests.
 
 ## Default settings
+
+Revision `0004` adds invoice discount reasons and void details, payment card last four digits, sandbox flag and recording user, item timestamps, constraints that keep invoice amounts and payer types consistent, the `ar_aging` and `ar_aging_summary` views and the `billing_tax_rate_percent` setting. Views are not tracked by Alembic autogenerate, so they live only in the migration.
+
+Revision `0003` adds `appointments.late_cancel` and the `guest_verifications` table used for guest email codes.
+
+Revision `0002` adds the authentication tables (`auth_tokens` for hashed one time email verification and password reset tokens, `mfa_recovery_codes` for hashed recovery codes), `users.email_verified_at`, `users.password_changed_at`, `patients.anonymized_at` and the retention settings `chat_retention_days` and `guest_anonymize_months`.
 
 Revision `0001` seeds `app_settings` with booking rules (minimum notice, horizon, same day booking, buffer, slot grid), the cancellation window, the receptionist discount limit, reminder timing and the LLM failover threshold. Gemini rate limits are intentionally not seeded: they are read from Google AI Studio and entered by an administrator.
 

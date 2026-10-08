@@ -1,0 +1,13 @@
+{% extends "_base.html.j2" %}
+{% from "_macros.html.j2" import button, details %}
+{% block content %}
+<h1 style="margin:0 0 12px;font-size:22px;color:#0B2545;">Your appointment is booked</h1>
+<p>Hello {{ first_name }},</p>
+<p>Thank you for booking with {{ clinic_name }}. Here are your appointment details:</p>
+{{ details(service, dentist, when, none) }}
+<p>A calendar file is attached so you can add the appointment to your calendar.</p>
+<p><strong>Where:</strong> {{ clinic_address }}</p>
+<p style="color:#475569;font-size:13px;">Please arrive a few minutes early. {{ cancel_policy }}</p>
+<p>{{ button(cancel_url, "Cancel appointment", false) }}{{ button(manage_url, "Manage in patient portal") }}</p>
+<p style="color:#475569;font-size:13px;">Need to talk to us? Call {{ clinic_phone }}.</p>
+{% endblock %}

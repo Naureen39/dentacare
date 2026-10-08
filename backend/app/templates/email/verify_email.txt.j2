@@ -1,0 +1,8 @@
+{% extends "_base.txt.j2" %}
+{% block content %}Welcome to {{ clinic_name }}.
+
+Confirm your email address to activate your account. The link is valid for {{ hours }} hours:
+{{ action_url }}
+
+If you did not create an account, you can ignore this message.
+{% endblock %}

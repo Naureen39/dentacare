@@ -1,0 +1,10 @@
+{% extends "_base.txt.j2" %}
+{% block content %}Hello {{ first_name }},
+
+Thank you for your {{ service }} visit with {{ dentist }} on {{ when }}. We hope you are comfortable and pleased with your care.
+
+If you have questions about aftercare, or anything does not feel right, please call us on {{ clinic_phone }}. If you experience severe pain, swelling or bleeding, contact us right away.
+
+Your invoice and visit history are available in the patient portal:
+{{ manage_url }}
+{% endblock %}

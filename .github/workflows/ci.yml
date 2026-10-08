@@ -67,7 +67,7 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run mypy app tests scripts
       - run: uv run pytest -q --cov --cov-report=term-missing
-      - run: uv run bandit -q -r app
+      - run: uv run bandit -q -c pyproject.toml -r app
       - run: uv run pip-audit
 
   frontend:

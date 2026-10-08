@@ -1,0 +1,9 @@
+{% extends "_base.html.j2" %}
+{% from "_macros.html.j2" import button %}
+{% block content %}
+<h1 style="margin:0 0 12px;font-size:22px;color:#0B2545;">Time for your next check-up</h1>
+<p>Hello {{ first_name }},</p>
+<p>It has been about six months since your last visit on {{ when }}. Regular check-ups and cleanings help catch small problems early.</p>
+<p>{{ button(book_url, "Book an appointment") }}</p>
+<p style="color:#475569;font-size:13px;">Prefer to talk to us? Call {{ clinic_phone }}. If you have already arranged a visit, please ignore this message.</p>
+{% endblock %}

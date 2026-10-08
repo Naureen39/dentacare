@@ -1,0 +1,9 @@
+{% extends "_base.html.j2" %}
+{% from "_macros.html.j2" import button %}
+{% block content %}
+<h1 style="margin:0 0 12px;font-size:22px;color:#0B2545;">Confirm your email address</h1>
+<p>Welcome to {{ clinic_name }}. Confirm your email address to activate your account.</p>
+<p>{{ button(action_url, "Confirm email address") }}</p>
+<p style="color:#475569;font-size:13px;">The link is valid for {{ hours }} hours. If the button does not work, copy this address into your browser:<br>{{ action_url }}</p>
+<p style="color:#475569;font-size:13px;">If you did not create an account, you can ignore this message.</p>
+{% endblock %}

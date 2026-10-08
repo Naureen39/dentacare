@@ -187,6 +187,7 @@ def make_invoice(
         patient_id=appointment.patient_id,
         subtotal=Decimal(subtotal),
         discount=Decimal(discount),
+        discount_reason="Loyalty discount" if Decimal(discount) != 0 else None,
         tax=Decimal(tax),
         total=Decimal(total),
         status=status,

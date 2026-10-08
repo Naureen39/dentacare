@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from sqlalchemy import (
     BigInteger,
+    Boolean,
     CheckConstraint,
     DateTime,
     ForeignKey,
@@ -33,6 +34,10 @@ class Invoice(Base):
         CheckConstraint("discount <= subtotal", name="discount_within_subtotal"),
         CheckConstraint("total = subtotal - discount + tax", name="total_matches_components"),
         CheckConstraint("insurance_expected >= 0", name="insurance_non_negative"),
+        CheckConstraint("insurance_expected <= total", name="insurance_within_total"),
+        CheckConstraint(
+            "discount = 0 OR discount_reason IS NOT NULL", name="discount_needs_reason"
+        ),
         # A voided invoice may be replaced, so uniqueness applies to live invoices only.
         Index(
             "uq_invoices_live_appointment",
@@ -70,6 +75,9 @@ class Invoice(Base):
     status: Mapped[InvoiceStatus] = mapped_column(
         pg_enum(InvoiceStatus, "invoice_status"), server_default=text("'draft'"), nullable=False
     )
+    discount_reason: Mapped[str | None] = mapped_column(String(300))
+    voided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    void_reason: Mapped[str | None] = mapped_column(String(300))
 
 
 class InvoiceItem(Base):
@@ -92,12 +100,22 @@ class InvoiceItem(Base):
     qty: Mapped[int] = mapped_column(Integer, server_default=text("1"), nullable=False)
     unit_price: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.clock_timestamp(), nullable=False
+    )
 
 
 class Payment(Base):
     __tablename__ = "payments"
     __table_args__ = (
         CheckConstraint("amount > 0", name="amount_positive"),
+        CheckConstraint(
+            "(method = 'insurance') = (payer_type = 'insurer')", name="method_matches_payer"
+        ),
+        CheckConstraint(
+            "card_last4 IS NULL OR (method = 'card' AND card_last4 ~ '^[0-9]{4}$')",
+            name="card_last4_format",
+        ),
         Index("ix_payments_paid_at", "paid_at"),
         Index("ix_payments_invoice_id", "invoice_id"),
     )
@@ -115,3 +133,8 @@ class Payment(Base):
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     reference: Mapped[str | None] = mapped_column(Text)
+    card_last4: Mapped[str | None] = mapped_column(String(4))
+    sandbox: Mapped[bool] = mapped_column(Boolean, server_default=text("false"), nullable=False)
+    recorded_by: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL")
+    )

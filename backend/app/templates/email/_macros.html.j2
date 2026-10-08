@@ -1,0 +1,21 @@
+{% macro button(url, label, primary=true) -%}
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 8px 6px 0;display:inline-block;">
+  <tr>
+    <td style="border-radius:999px;background-color:{{ '#0B2545' if primary else '#FFFFFF' }};border:1px solid #0B2545;">
+      <a href="{{ url }}" style="display:inline-block;padding:11px 24px;font-size:14px;font-weight:bold;color:{{ '#FFFFFF' if primary else '#0B2545' }};text-decoration:none;">{{ label }}</a>
+    </td>
+  </tr>
+</table>
+{%- endmacro %}
+
+{% macro details(service, dentist, when, until) -%}
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color:#E8F6F5;border-radius:8px;margin:16px 0;">
+  <tr>
+    <td style="padding:16px 18px;font-size:14px;line-height:1.6;">
+      <strong>{{ service }}</strong><br>
+      With {{ dentist }}<br>
+      {{ when }}
+    </td>
+  </tr>
+</table>
+{%- endmacro %}

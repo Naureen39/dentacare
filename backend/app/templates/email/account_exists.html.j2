@@ -1,0 +1,8 @@
+{% extends "_base.html.j2" %}
+{% from "_macros.html.j2" import button %}
+{% block content %}
+<h1 style="margin:0 0 12px;font-size:22px;color:#0B2545;">Your account already exists</h1>
+<p>Someone tried to register this email address, but an account already exists.</p>
+<p>{{ button(action_url, "Sign in") }}</p>
+<p style="color:#475569;font-size:13px;">Forgot your password? You can reset it from the sign in page. If this was not you, no action is needed.</p>
+{% endblock %}

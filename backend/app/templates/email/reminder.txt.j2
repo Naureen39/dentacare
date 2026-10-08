@@ -1,0 +1,19 @@
+{% extends "_base.txt.j2" %}
+{% block content %}Hello {{ first_name }},
+
+{{ headline }}
+
+{{ service }}
+With {{ dentist }}
+{{ when }}
+Where: {{ clinic_address }}
+
+{% if confirm_url %}Please let us know whether you can attend.
+Confirm: {{ confirm_url }}
+Cancel: {{ cancel_url }}
+{% else %}Your appointment is confirmed. If your plans have changed:
+Cancel: {{ cancel_url }}
+{% endif %}
+{{ cancel_policy }}
+To move your appointment to another time, sign in to the patient portal or call {{ clinic_phone }}.
+{% endblock %}

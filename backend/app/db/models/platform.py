@@ -43,6 +43,7 @@ class AuditLog(Base):
 
 
 class Testimonial(Base):
+    __test__ = False  # the name is not a pytest test class
     __tablename__ = "testimonials"
     __table_args__ = (CheckConstraint("rating BETWEEN 1 AND 5", name="rating_range"),)
 

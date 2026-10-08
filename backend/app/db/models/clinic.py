@@ -74,6 +74,7 @@ class Patient(Base):
         pg_enum(PatientSource, "patient_source"), server_default=text("'web'"), nullable=False
     )
     created_at: Mapped[datetime] = created_at_column()
+    anonymized_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Dentist(Base):

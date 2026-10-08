@@ -99,3 +99,13 @@ class InquiryStatus(StrEnum):
     NEW = "new"
     IN_PROGRESS = "in_progress"
     CLOSED = "closed"
+
+
+class AuthTokenPurpose(StrEnum):
+    EMAIL_VERIFICATION = "email_verification"
+    PASSWORD_RESET = "password_reset"
+
+
+class AppointmentAction(StrEnum):
+    CONFIRM = "confirm"
+    CANCEL = "cancel"

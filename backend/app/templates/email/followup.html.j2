@@ -1,0 +1,10 @@
+{% extends "_base.html.j2" %}
+{% from "_macros.html.j2" import button %}
+{% block content %}
+<h1 style="margin:0 0 12px;font-size:22px;color:#0B2545;">Thank you for visiting us</h1>
+<p>Hello {{ first_name }},</p>
+<p>Thank you for your {{ service }} visit with {{ dentist }} on {{ when }}. We hope you are comfortable and pleased with your care.</p>
+<p>If you have questions about aftercare, or anything does not feel right, please call us on {{ clinic_phone }}. If you experience severe pain, swelling or bleeding, contact us right away.</p>
+<p>Your invoice and visit history are available in the patient portal.</p>
+<p>{{ button(manage_url, "Open patient portal") }}</p>
+{% endblock %}

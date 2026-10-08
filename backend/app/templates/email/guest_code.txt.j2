@@ -1,0 +1,7 @@
+{% extends "_base.txt.j2" %}
+{% block content %}Hello {{ first_name }},
+
+Your verification code is {{ code }}. It is valid for {{ minutes }} minutes. Enter it on the booking page to confirm your appointment.
+
+If you did not request this code, you can ignore this message.
+{% endblock %}

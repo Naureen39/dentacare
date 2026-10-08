@@ -23,13 +23,19 @@ class AppError(Exception):
     """Domain error that maps to a uniform error response."""
 
     def __init__(
-        self, code: str, message: str, status_code: int = 400, details: Any = None
+        self,
+        code: str,
+        message: str,
+        status_code: int = 400,
+        details: Any = None,
+        headers: dict[str, str] | None = None,
     ) -> None:
         super().__init__(message)
         self.code = code
         self.message = message
         self.status_code = status_code
         self.details = details
+        self.headers = headers
 
 
 _STATUS_CODES = {
@@ -49,23 +55,30 @@ def _request_id(request: Request) -> str | None:
 
 
 def _response(
-    request: Request, status_code: int, code: str, message: str, details: Any = None
+    request: Request,
+    status_code: int,
+    code: str,
+    message: str,
+    details: Any = None,
+    headers: dict[str, str] | None = None,
 ) -> JSONResponse:
     body = ErrorResponse(
         code=code, message=message, details=details, request_id=_request_id(request)
     )
-    return JSONResponse(status_code=status_code, content=body.model_dump())
+    return JSONResponse(status_code=status_code, content=body.model_dump(), headers=headers)
 
 
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(AppError)
     async def handle_app_error(request: Request, exc: AppError) -> JSONResponse:
-        return _response(request, exc.status_code, exc.code, exc.message, exc.details)
+        return _response(request, exc.status_code, exc.code, exc.message, exc.details, exc.headers)
 
     @app.exception_handler(StarletteHTTPException)
     async def handle_http_error(request: Request, exc: StarletteHTTPException) -> JSONResponse:
         code = _STATUS_CODES.get(exc.status_code, "http_error")
-        return _response(request, exc.status_code, code, str(exc.detail))
+        return _response(
+            request, exc.status_code, code, str(exc.detail), headers=dict(exc.headers or {})
+        )
 
     @app.exception_handler(RequestValidationError)
     async def handle_validation_error(

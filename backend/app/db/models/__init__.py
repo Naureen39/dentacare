@@ -11,7 +11,13 @@ from app.db.models.clinic import (
     ScheduleException,
     Service,
 )
-from app.db.models.identity import RefreshToken, User
+from app.db.models.identity import (
+    AuthToken,
+    GuestVerification,
+    MfaRecoveryCode,
+    RefreshToken,
+    User,
+)
 from app.db.models.knowledge import IntentExample, KbChunk, KbDocument
 from app.db.models.platform import (
     AppSetting,
@@ -20,12 +26,19 @@ from app.db.models.platform import (
     NewsletterSubscriber,
     Testimonial,
 )
-from app.db.models.scheduling import Appointment, AppointmentStatusHistory, Reminder
+from app.db.models.scheduling import (
+    Appointment,
+    AppointmentActionToken,
+    AppointmentStatusHistory,
+    Reminder,
+)
 
 __all__ = [
     "Appointment",
+    "AppointmentActionToken",
     "AppointmentStatusHistory",
     "AppSetting",
+    "AuthToken",
     "AuditLog",
     "ChatMessage",
     "ChatSession",
@@ -33,6 +46,7 @@ __all__ = [
     "Dentist",
     "DentistSchedule",
     "DentistService",
+    "GuestVerification",
     "InsuranceProvider",
     "IntentExample",
     "Invoice",
@@ -40,6 +54,7 @@ __all__ = [
     "KbChunk",
     "KbDocument",
     "LlmUsage",
+    "MfaRecoveryCode",
     "NewsletterSubscriber",
     "Patient",
     "Payment",

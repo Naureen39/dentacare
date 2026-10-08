@@ -39,6 +39,7 @@ def test_upgrade_creates_every_model_table(scratch_db: str) -> None:
     assert {"vector", "pg_trgm", "btree_gist", "pgcrypto", "citext"} <= set(
         fetch(scratch_db, EXTENSIONS)
     )
+    assert {"auth_tokens", "mfa_recovery_codes"} <= tables
 
 
 def test_downgrade_to_base_removes_everything_it_created(scratch_db: str) -> None:
@@ -76,3 +77,5 @@ def test_default_settings_are_seeded(scratch_db: str) -> None:
     assert "booking_min_notice_hours" in keys
     assert "booking_max_horizon_days" in keys
     assert "cancellation_free_hours" in keys
+    assert "chat_retention_days" in keys
+    assert "guest_anonymize_months" in keys

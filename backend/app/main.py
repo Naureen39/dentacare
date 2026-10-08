@@ -9,10 +9,15 @@ from redis.asyncio import Redis
 from app.api import health
 from app.api.v1.router import router as v1_router
 from app.core.config import Settings, get_settings
+from app.core.crypto import FieldCipher
 from app.core.errors import ErrorResponse, register_exception_handlers
 from app.core.logging import configure_logging
 from app.core.middleware import RequestIDMiddleware
+from app.core.security import PasswordService
+from app.core.security_headers import SecurityHeadersMiddleware
 from app.db.session import create_engine, create_session_factory
+from app.services.mailer import SmtpMailer
+from app.services.queue import ArqJobQueue
 
 logger = structlog.get_logger(__name__)
 
@@ -29,10 +34,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.engine = engine
         app.state.session_factory = create_session_factory(engine)
         app.state.redis = redis
+        app.state.cipher = FieldCipher.from_settings(
+            cfg.field_encryption_key, cfg.field_encryption_old_keys, cfg.jwt_secret
+        )
+        app.state.passwords = PasswordService(cfg)
+        app.state.mailer = SmtpMailer(cfg)
+        app.state.jobs = ArqJobQueue(cfg.redis_url)
         logger.info("startup_complete", env=cfg.env)
         try:
             yield
         finally:
+            await app.state.jobs.close()
             await redis.aclose()
             await engine.dispose()
             logger.info("shutdown_complete")
@@ -55,9 +67,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_origins=cfg.cors_origin_list,
         allow_credentials=True,
         allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE"],
-        allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
+        allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-CSRF-Token"],
         expose_headers=["X-Request-ID"],
     )
+    app.add_middleware(SecurityHeadersMiddleware, hsts=cfg.is_production)
     app.add_middleware(RequestIDMiddleware)
 
     register_exception_handlers(app)

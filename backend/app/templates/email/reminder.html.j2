@@ -1,0 +1,17 @@
+{% extends "_base.html.j2" %}
+{% from "_macros.html.j2" import button, details %}
+{% block content %}
+<h1 style="margin:0 0 12px;font-size:22px;color:#0B2545;">{{ headline }}</h1>
+<p>Hello {{ first_name }},</p>
+<p>This is a reminder of your upcoming appointment at {{ clinic_name }}.</p>
+{{ details(service, dentist, when, none) }}
+<p><strong>Where:</strong> {{ clinic_address }}</p>
+{% if confirm_url %}
+<p>Please let us know whether you can attend:</p>
+<p>{{ button(confirm_url, "Confirm appointment") }}{{ button(cancel_url, "Cancel appointment", false) }}</p>
+{% else %}
+<p>Your appointment is confirmed. If your plans have changed:</p>
+<p>{{ button(cancel_url, "Cancel appointment", false) }}</p>
+{% endif %}
+<p style="color:#475569;font-size:13px;">{{ cancel_policy }} To move your appointment to another time, sign in to the patient portal or call {{ clinic_phone }}.</p>
+{% endblock %}
