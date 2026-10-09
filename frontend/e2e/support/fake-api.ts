@@ -150,6 +150,21 @@ export class FakeApi {
     switch (key) {
       case 'GET /public/services':
         return this.json(route, [ROUTINE])
+      case 'POST /chat/sessions':
+        return this.json(
+          route,
+          {
+            session_id: 'chat-1',
+            session_token: 'chat-secret',
+            greeting: this.say('Hello, I am the Meridian Assistant. How can I help?', {
+              quick_replies: [
+                { label: 'Book an appointment', kind: 'action', value: 'start_booking' },
+                { label: 'Opening hours', kind: 'action', value: 'hours' },
+              ],
+            }),
+          },
+          201,
+        )
       case 'GET /public/dentists':
         return this.json(route, DENTISTS)
       case 'GET /public/insurance-providers':
@@ -251,6 +266,9 @@ export class FakeApi {
         return this.book(route, body)
     }
 
+    if (method === 'POST' && path === '/chat/sessions/chat-1/messages')
+      return this.chat(route, body.choice)
+
     const reschedule = path.match(/^\/me\/appointments\/([\w-]+)\/reschedule$/)
     if (method === 'POST' && reschedule) {
       const old = this.appointments.find((a) => a.id === reschedule[1])
@@ -269,6 +287,78 @@ export class FakeApi {
       return this.json(route, found)
     }
     return this.error(route, 404, 'not_found', `Unexpected request: ${key}`)
+  }
+
+  /** A reply in the shape the assistant sends. */
+  private say(text: string, extra: Record<string, unknown> = {}) {
+    return {
+      message_id: `00000000-0000-4000-8000-${String(this.counter++).padStart(12, '0')}`,
+      text,
+      route: 'rule',
+      intent: null,
+      quick_replies: [],
+      links: [],
+      input_hint: null,
+      picker: null,
+      degraded: false,
+      flow: null,
+      step: null,
+      ...extra,
+    }
+  }
+
+  /** The booking conversation, one step per button: service, day, time, confirm. */
+  private chat(route: Route, choice: { kind: string; value: string } | undefined) {
+    const slot = new Date(Date.now() + 24 * HOUR)
+    slot.setUTCMinutes(0, 0, 0)
+    const day = slot.toISOString().slice(0, 10)
+    const key = `${choice?.kind}:${choice?.value}`
+    const dentist = DENTISTS[0]!
+    let reply = this.say('I can help with booking, hours and prices.')
+    if (key === 'action:start_booking')
+      reply = this.say('What would you like to book?', {
+        flow: 'book',
+        step: 'service',
+        quick_replies: [{ label: ROUTINE.name, kind: 'service', value: ROUTINE.id }],
+      })
+    else if (choice?.kind === 'service')
+      reply = this.say('Which day suits you?', {
+        flow: 'book',
+        step: 'day',
+        picker: 'date',
+        quick_replies: [{ label: 'Tomorrow (3 open)', kind: 'date', value: day }],
+      })
+    else if (choice?.kind === 'date')
+      reply = this.say('Here are some available times. Pick one.', {
+        flow: 'book',
+        step: 'time',
+        picker: 'slot',
+        quick_replies: [
+          { label: '10:00 AM', kind: 'slot', value: `${slot.toISOString()}|${dentist.id}` },
+        ],
+      })
+    else if (choice?.kind === 'slot')
+      reply = this.say(`${ROUTINE.name} with ${dentist.full_name} tomorrow at 10:00 AM.`, {
+        flow: 'book',
+        step: 'confirm',
+        quick_replies: [
+          { label: 'Confirm', kind: 'confirm', value: 'yes' },
+          { label: 'Change time', kind: 'action', value: 'change_time' },
+        ],
+      })
+    else if (key === 'confirm:yes') {
+      this.appointments.push(this.make(slot, dentist))
+      reply = this.say('Your appointment is booked. A confirmation email is on its way.', {
+        links: [{ label: 'Manage my appointments', url: '/portal/appointments' }],
+      })
+    } else if (key === 'action:hours')
+      reply = this.say('We are open Monday to Friday, 8 AM to 6 PM.')
+    const events = [
+      `event: meta\ndata: ${JSON.stringify({ message_id: reply.message_id, route: 'rule' })}\n\n`,
+      `event: delta\ndata: ${JSON.stringify({ text: reply.text })}\n\n`,
+      `event: done\ndata: ${JSON.stringify(reply)}\n\n`,
+    ]
+    return route.fulfill({ status: 200, contentType: 'text/event-stream', body: events.join('') })
   }
 
   private book(route: Route, body: { start: string; dentist_id: string }) {

@@ -292,3 +292,22 @@ async def test_only_admins_see_the_metrics(bot: Bot) -> None:
     token = await bot.practice.patient_token()
     response = await client.get("/api/v1/admin/chat/metrics", headers=bot.ctx.auth(token))
     assert response.status_code == 403
+
+
+async def test_ending_a_conversation_deletes_it_and_its_token_stops_working(bot: Bot) -> None:
+    convo = await bot.conversation()
+    await convo.say("what are your opening hours")
+    assert await bot.ctx.fetch(
+        "SELECT 1 FROM chat_messages WHERE session_id = :s", s=convo.session_id
+    )
+    url = f"{BASE}/sessions/{convo.session_id}"
+    client = bot.ctx.client
+    assert (await client.delete(url)).status_code == 404  # needs the token
+    assert (await client.delete(url, headers={"X-Chat-Token": "wrong"})).status_code == 404
+    assert (await client.delete(url, headers={"X-Chat-Token": convo.token})).status_code == 204
+    assert not await bot.ctx.fetch("SELECT 1 FROM chat_sessions WHERE id = :s", s=convo.session_id)
+    assert not await bot.ctx.fetch(
+        "SELECT 1 FROM chat_messages WHERE session_id = :s", s=convo.session_id
+    )
+    assert (await client.get(url, headers={"X-Chat-Token": convo.token})).status_code == 404
+    assert (await client.delete(url, headers={"X-Chat-Token": convo.token})).status_code == 404

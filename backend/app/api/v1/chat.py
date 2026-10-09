@@ -5,6 +5,7 @@ import json
 import secrets
 import uuid
 from collections.abc import AsyncIterator
+from datetime import datetime
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Header, Query, Request
@@ -41,6 +42,7 @@ from app.schemas.chat import (
     SendMessageRequest,
     SessionOut,
 )
+from app.services import holds
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 admin_router = APIRouter(prefix="/admin/chat", tags=["chat"])
@@ -244,6 +246,22 @@ async def send_message(
             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
         )
     return out
+
+
+@router.delete("/sessions/{session_id}", status_code=204, dependencies=[chat_limit])
+async def end_session(
+    session_id: uuid.UUID, db: Session, redis: RedisDep, x_chat_token: ChatToken = None
+) -> None:
+    """End the conversation at the visitor's request: its messages are deleted, a time held in
+    the middle of booking is released, and the secret token stops working."""
+    session = await load_session(db, session_id, x_chat_token)
+    flow = SessionState.load(session.state).flow
+    if flow and flow.hold_token and flow.start and flow.slot_dentist_id:
+        await holds.release(
+            redis, uuid.UUID(flow.slot_dentist_id), datetime.fromisoformat(flow.start)
+        )
+    await db.delete(session)
+    await db.commit()
 
 
 @router.post("/sessions/{session_id}/feedback", status_code=204, dependencies=[chat_limit])

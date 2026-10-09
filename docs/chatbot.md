@@ -86,6 +86,7 @@ answer is replaced by the stored short answer.
 | `POST /chat/sessions/{id}/messages` | Send `text` or a button `choice`. Send `Accept: text/event-stream` to receive the reply as server sent events. |
 | `GET /chat/sessions/{id}` | The conversation with the buttons of each reply, for reloading. |
 | `POST /chat/sessions/{id}/feedback` | Thumbs up or down on an assistant reply. |
+| `DELETE /chat/sessions/{id}` | End the conversation at the visitor's request: deletes it and releases a held time. |
 | `GET /admin/chat/metrics` | Zero model share, tokens per conversation, booking funnel, handoffs, feedback, unanswered questions. |
 
 Every call after the first needs the token in `X-Chat-Token`; it is stored only as a hash. A

@@ -1685,7 +1685,12 @@ export interface paths {
         get: operations["get_session_api_v1_chat_sessions__session_id__get"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * End Session
+         * @description End the conversation at the visitor's request: its messages are deleted, a time held in
+         *     the middle of booking is released, and the secret token stops working.
+         */
+        delete: operations["end_session_api_v1_chat_sessions__session_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -9425,6 +9430,46 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["SessionOut"];
                 };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    end_session_api_v1_chat_sessions__session_id__delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Chat-Token"?: string | null;
+            };
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unprocessable Entity */
             422: {

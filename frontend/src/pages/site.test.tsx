@@ -377,13 +377,16 @@ describe('global elements', () => {
     expect(screen.queryByRole('region', { name: 'Cookie notice' })).not.toBeInTheDocument()
   }, 30_000)
 
-  it('has a chat button that opens a panel, and a mobile call and book bar', async () => {
+  it('has an assistant button that opens the chat, and a mobile call and book bar', async () => {
     const user = userEvent.setup()
     await open('/pricing')
     await h1()
     await user.click(screen.getByRole('button', { name: 'Chat with our assistant' }))
-    const dialog = await screen.findByRole('dialog', { name: 'Chat with our assistant' })
-    expect(within(dialog).getByRole('link', { name: /call \(555\) 010-0199/i })).toBeInTheDocument()
+    const dialog = await screen.findByRole('dialog', { name: 'Meridian Assistant' })
+    // The test server has no assistant, so the chat shows the other ways to book.
+    expect(
+      (await within(dialog).findAllByRole('link', { name: /\(555\) 010-0199/ })).length,
+    ).toBeGreaterThan(0)
     await user.keyboard('{Escape}')
     const bar = screen.getByRole('navigation', { name: 'Quick actions' })
     expect(within(bar).getByRole('link', { name: 'Call' })).toHaveAttribute(

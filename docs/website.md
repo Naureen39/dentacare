@@ -45,7 +45,6 @@ settings) on the home page, a service page and the style guide. Required: perfor
 accessibility, best practices and SEO 95 or more. The accessibility checks also run in the unit
 tests (`vitest-axe`), and a site wide text rule check runs with `python scripts/check_text_rules.py`.
 
-## Not built yet
+## Booking and the assistant
 
-The chat button opens a placeholder until the assistant widget (Phase 16). `/book` is a
-placeholder until the booking wizard (Phase 13).
+The booking wizard and the patient portal are described in [booking-and-portal.md](booking-and-portal.md), the chat window in [chat-widget.md](chat-widget.md).

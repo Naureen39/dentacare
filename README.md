@@ -2,7 +2,7 @@
 
 Clinic website, online booking, patient portal, staff console, revenue and analytics dashboard, and a support and booking assistant. The clinic is fictional and this is a demo environment.
 
-The full build plan is in [plan (2).md](<plan (2).md>). This repository currently contains **Phase 1 (Foundations)**, **Phase 2 (Database schema and migrations)** and **Phase 3 (Authentication, authorization and security baseline)** **Phase 4 (Core booking backend)** **Phase 5 (Billing and payments)** **Phase 6 (Notifications and background jobs)** **Phase 7 (Knowledge base and embeddings)**, **Phase 8 (LLM gateway)**, **Phase 9 (Chatbot orchestration)** **Phase 10 (Analytics backend, forecasting and no show model)** **Phase 11 (Frontend foundation and design system)** **Phase 12 (Public website)** **Phase 13 (Booking wizard and patient portal)**, **Phase 14 (Staff and admin console)** and **Phase 15 (Analytics dashboard)**.
+The full build plan is in [plan (2).md](<plan (2).md>). This repository currently contains **Phase 1 (Foundations)**, **Phase 2 (Database schema and migrations)** and **Phase 3 (Authentication, authorization and security baseline)** **Phase 4 (Core booking backend)** **Phase 5 (Billing and payments)** **Phase 6 (Notifications and background jobs)** **Phase 7 (Knowledge base and embeddings)**, **Phase 8 (LLM gateway)**, **Phase 9 (Chatbot orchestration)** **Phase 10 (Analytics backend, forecasting and no show model)** **Phase 11 (Frontend foundation and design system)** **Phase 12 (Public website)** **Phase 13 (Booking wizard and patient portal)**, **Phase 14 (Staff and admin console)** **Phase 15 (Analytics dashboard)** and **Phase 16 (Chat widget)**.
 
 ## Quick start
 
@@ -82,7 +82,7 @@ The public website (pages, search engine markup, prerendering and the Lighthouse
 
 The booking wizard and the patient portal, and how to run their browser tests (`npm run test:e2e`), are described in [docs/booking-and-portal.md](docs/booking-and-portal.md).
 
-The staff and admin console is described in [docs/console.md](docs/console.md) and the analytics dashboard in [docs/analytics-dashboard.md](docs/analytics-dashboard.md).
+The staff and admin console is described in [docs/console.md](docs/console.md) and the analytics dashboard in [docs/analytics-dashboard.md](docs/analytics-dashboard.md). The chat window is described in [docs/chat-widget.md](docs/chat-widget.md).
 
 ## Analytics
 
