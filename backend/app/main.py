@@ -9,6 +9,7 @@ from redis.asyncio import Redis
 
 from app.api import health
 from app.api.v1.router import router as v1_router
+from app.chat.llm_gateway import LlmGateway
 from app.core.config import Settings, get_settings
 from app.core.crypto import FieldCipher
 from app.core.errors import ErrorResponse, register_exception_handlers
@@ -42,6 +43,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.passwords = PasswordService(cfg)
         app.state.mailer = SmtpMailer(cfg)
         app.state.jobs = ArqJobQueue(cfg.redis_url)
+        app.state.llm = LlmGateway(
+            settings=cfg, redis=redis, session_factory=app.state.session_factory
+        )
         embedder = EmbeddingService(cfg.embed_model, cfg.embed_cache_dir, redis)
         app.state.embedder = embedder
         warm_up_task: asyncio.Task[None] | None = None
@@ -87,7 +91,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_origins=cfg.cors_origin_list,
         allow_credentials=True,
         allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE"],
-        allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-CSRF-Token"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "X-Request-ID",
+            "X-CSRF-Token",
+            "X-Chat-Token",
+        ],
         expose_headers=["X-Request-ID"],
     )
     app.add_middleware(SecurityHeadersMiddleware, hsts=cfg.is_production)

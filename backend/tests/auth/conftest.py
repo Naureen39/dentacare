@@ -30,7 +30,8 @@ CLEANUP_ORDER = [
     "kb_chunks", "kb_documents", "intent_examples",
     "audit_logs", "llm_usage", "chat_messages", "chat_sessions", "payments", "invoice_items",
     "invoices", "appointment_action_tokens", "reminders", "appointment_status_history", "appointments", "dentist_services",
-    "dentist_schedules", "schedule_exceptions", "patients", "dentists", "services",
+    "dentist_schedules", "schedule_exceptions", "patient_notes", "patients", "dentists",
+    "service_price_changes", "services",
     "insurance_providers", "newsletter_subscribers", "contact_inquiries", "testimonials",
     "guest_verifications", "auth_tokens", "mfa_recovery_codes", "refresh_tokens", "users",
 ]  # fmt: skip

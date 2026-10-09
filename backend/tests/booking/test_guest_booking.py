@@ -270,3 +270,34 @@ async def test_guest_booking_endpoints_are_rate_limited_per_ip(practice: Practic
         statuses.append(response.status_code)
     assert statuses == [202, 202, 202, 429, 429]
     assert response.headers["retry-after"]
+
+
+async def test_insurance_given_by_a_new_guest_is_kept_encrypted(practice: Practice) -> None:
+    email = unique_email("guest")
+    await practice.ctx.execute("INSERT INTO insurance_providers (name) VALUES ('Alpine Mutual')")
+    provider = (await practice.ctx.fetch("SELECT id FROM insurance_providers"))[0][0]
+    start = local_utc(future_date(2), 11, 0)
+    vid, code = await request_code(practice, email)
+    hold = await practice.hold(practice.dentist_a, start)
+    response = await practice.ctx.client.post(
+        BOOK,
+        json=guest_payload(
+            practice,
+            email,
+            vid,
+            code,
+            hold,
+            start,
+            insurance_provider_id=str(provider),
+            insurance_member_id="MEMBER-123",
+        ),
+    )
+    assert response.status_code == 201, response.text
+    row = (
+        await practice.ctx.fetch(
+            "SELECT insurance_provider_id, insurance_member_id_enc FROM patients WHERE email = :e",
+            e=email,
+        )
+    )[0]
+    assert row[0] == provider
+    assert row[1] and "MEMBER-123" not in row[1]

@@ -1,21 +1,11 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useState } from 'react'
-import { RouterProvider } from 'react-router-dom'
+import { RouterProvider, type createBrowserRouter } from 'react-router-dom'
 
-import { createAppRouter } from '@/app/routes'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { Providers } from '@/app/Providers'
 
-export function App() {
-  const [queryClient] = useState(
-    () => new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 30_000 } } }),
-  )
-  const [router] = useState(() => createAppRouter())
-
+export function App({ router }: { router: ReturnType<typeof createBrowserRouter> }) {
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <Providers>
+      <RouterProvider router={router} />
+    </Providers>
   )
 }

@@ -99,6 +99,10 @@ jobs:
           diff -q /tmp/api-types.before.ts src/lib/api-types.ts
       - run: npm run typecheck
       - run: npm test
+      - name: End to end tests of booking and the patient portal
+        run: npm run test:e2e
+      - name: Accessibility audit of the style guide
+        run: npm run audit:styleguide
       - run: npm run build
       - run: npm audit --audit-level=high
 

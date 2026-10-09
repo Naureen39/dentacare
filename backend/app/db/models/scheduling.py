@@ -85,6 +85,8 @@ class Appointment(Base):
         ForeignKey("appointments.id", ondelete="SET NULL")
     )
     late_cancel: Mapped[bool] = mapped_column(Boolean, server_default=text("false"), nullable=False)
+    # The dentist's private clinical note, encrypted. Only the treating dentist reads or writes it.
+    clinical_note_enc: Mapped[str | None] = mapped_column(Text)
 
 
 class AppointmentStatusHistory(Base):

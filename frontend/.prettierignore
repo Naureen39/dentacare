@@ -1,5 +1,11 @@
 dist
+dist-audit
+dist-server
 node_modules
 src/lib/api-types.ts
 package-lock.json
 openapi.json
+
+
+playwright-report
+test-results

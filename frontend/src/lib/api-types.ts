@@ -197,6 +197,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Sessions */
+        get: operations["list_sessions_api_v1_auth_sessions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/sessions/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke Session */
+        delete: operations["revoke_session_api_v1_auth_sessions__session_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/forgot": {
         parameters: {
             query?: never;
@@ -399,6 +433,23 @@ export interface paths {
         };
         /** List Dentists */
         get: operations["list_dentists_api_v1_public_dentists_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/insurance-providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Insurance Providers */
+        get: operations["list_insurance_providers_api_v1_public_insurance_providers_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -761,6 +812,521 @@ export interface paths {
         patch: operations["change_status_api_v1_staff_appointments__appointment_id__status_patch"];
         trace?: never;
     };
+    "/api/v1/staff/appointments/{appointment_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Appointment Detail */
+        get: operations["appointment_detail_api_v1_staff_appointments__appointment_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/appointments/{appointment_id}/clinical-note": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save Clinical Note
+         * @description The treating dentist's private note. Nobody else can read or change it.
+         */
+        put: operations["save_clinical_note_api_v1_staff_appointments__appointment_id__clinical_note_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/appointments/{appointment_id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Complete Visit
+         * @description Mark a visit completed, add the services performed to the draft invoice and keep the note.
+         */
+        post: operations["complete_visit_api_v1_staff_appointments__appointment_id__complete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/appointments/{appointment_id}/reschedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Reschedule For Patient
+         * @description Move a visit to another time or dentist, for example by dragging it on the schedule.
+         */
+        patch: operations["reschedule_for_patient_api_v1_staff_appointments__appointment_id__reschedule_patch"];
+        trace?: never;
+    };
+    "/api/v1/patients/{patient_id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Patient History */
+        get: operations["patient_history_api_v1_patients__patient_id__history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/patients/{patient_id}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Patient Notes */
+        get: operations["list_patient_notes_api_v1_patients__patient_id__notes_get"];
+        put?: never;
+        /** Add Patient Note */
+        post: operations["add_patient_note_api_v1_patients__patient_id__notes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/patients/{patient_id}/duplicates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Duplicate Candidates
+         * @description Other records that may be the same person: similar name (trigram), same email or phone.
+         *
+         *     This only suggests. Nothing is merged automatically.
+         */
+        get: operations["duplicate_candidates_api_v1_patients__patient_id__duplicates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/me/performance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Performance */
+        get: operations["my_performance_api_v1_staff_me_performance_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Alerts
+         * @description Counts for the bell in the top bar.
+         */
+        get: operations["alerts_api_v1_staff_alerts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/staff/appointments/{appointment_id}/remind": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Reminder Now
+         * @description Send the visit reminder email now, for example to a patient the no show score flags.
+         */
+        post: operations["send_reminder_now_api_v1_staff_appointments__appointment_id__remind_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Staff */
+        get: operations["list_staff_api_v1_admin_users_get"];
+        put?: never;
+        /**
+         * Create Staff
+         * @description Create a staff account. The person sets their own password from an emailed link.
+         */
+        post: operations["create_staff_api_v1_admin_users_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Staff */
+        patch: operations["update_staff_api_v1_admin_users__user_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/reset-mfa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset Staff Mfa
+         * @description Remove two step verification so the person enrols again at their next sign in.
+         */
+        post: operations["reset_staff_mfa_api_v1_admin_users__user_id__reset_mfa_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Services */
+        get: operations["list_services_api_v1_admin_services_get"];
+        put?: never;
+        /** Create Service */
+        post: operations["create_service_api_v1_admin_services_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/services/{service_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Service */
+        patch: operations["update_service_api_v1_admin_services__service_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/services/{service_id}/price-changes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Schedule Price Change
+         * @description Set a new price from a day. Today or earlier takes effect at once, later days wait.
+         */
+        post: operations["schedule_price_change_api_v1_admin_services__service_id__price_changes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/services/{service_id}/price-changes/{change_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Cancel Price Change */
+        delete: operations["cancel_price_change_api_v1_admin_services__service_id__price_changes__change_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/dentists": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Dentists */
+        get: operations["list_dentists_api_v1_admin_dentists_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/dentists/{dentist_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Dentist */
+        patch: operations["update_dentist_api_v1_admin_dentists__dentist_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/dentists/{dentist_id}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Schedule */
+        get: operations["get_schedule_api_v1_admin_dentists__dentist_id__schedule_get"];
+        /**
+         * Replace Schedule
+         * @description Replace the weekly working hours. A weekday that is left out is a day off.
+         */
+        put: operations["replace_schedule_api_v1_admin_dentists__dentist_id__schedule_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/dentists/{dentist_id}/time-off": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Time Off */
+        get: operations["list_time_off_api_v1_admin_dentists__dentist_id__time_off_get"];
+        put?: never;
+        /** Add Time Off */
+        post: operations["add_time_off_api_v1_admin_dentists__dentist_id__time_off_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/time-off/{time_off_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Time Off */
+        delete: operations["remove_time_off_api_v1_admin_time_off__time_off_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/kb/intents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Intents */
+        get: operations["list_intents_api_v1_admin_kb_intents_get"];
+        put?: never;
+        /** Add Intent */
+        post: operations["add_intent_api_v1_admin_kb_intents_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/kb/intents/{example_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Intent */
+        delete: operations["delete_intent_api_v1_admin_kb_intents__example_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Chat Sessions */
+        get: operations["list_chat_sessions_api_v1_admin_chat_sessions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/sessions/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Chat Transcript */
+        get: operations["get_chat_transcript_api_v1_admin_chat_sessions__session_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Settings */
+        get: operations["read_settings_api_v1_admin_settings_get"];
+        /** Update Settings */
+        put: operations["update_settings_api_v1_admin_settings_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/audit-logs/export.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Audit Logs */
+        get: operations["export_audit_logs_api_v1_admin_audit_logs_export_csv_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/billing/invoices": {
         parameters: {
             query?: never;
@@ -1011,6 +1577,606 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/llm/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Llm Status
+         * @description Provider order, circuit breaker state, cooldowns and how much of each limit is used.
+         */
+        get: operations["llm_status_api_v1_admin_llm_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/llm/primary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Primary
+         * @description Choose which provider is tried first. The other one remains the fallback.
+         */
+        put: operations["set_primary_api_v1_admin_llm_primary_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/llm/limits/{provider}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Limits
+         * @description Store a provider's published limits, for example Gemini's from Google AI Studio.
+         */
+        put: operations["set_limits_api_v1_admin_llm_limits__provider__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/llm/usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Usage
+         * @description Calls, tokens, latency and failovers per provider and outcome.
+         */
+        get: operations["usage_api_v1_admin_llm_usage_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Session */
+        post: operations["create_session_api_v1_chat_sessions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/sessions/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Session */
+        get: operations["get_session_api_v1_chat_sessions__session_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/sessions/{session_id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send Message */
+        post: operations["send_message_api_v1_chat_sessions__session_id__messages_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/chat/sessions/{session_id}/feedback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Give Feedback */
+        post: operations["give_feedback_api_v1_chat_sessions__session_id__feedback_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/chat/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Metrics
+         * @description Zero model share, tokens per conversation, booking funnel and unanswered questions.
+         */
+        get: operations["metrics_api_v1_admin_chat_metrics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Summary
+         * @description KPI cards with the previous period, the change and a sparkline.
+         */
+        get: operations["summary_api_v1_analytics_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/revenue/trend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Revenue Trend */
+        get: operations["revenue_trend_api_v1_analytics_revenue_trend_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/revenue/by-service": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Revenue By Service */
+        get: operations["revenue_by_service_api_v1_analytics_revenue_by_service_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/revenue/by-dentist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Revenue By Dentist */
+        get: operations["revenue_by_dentist_api_v1_analytics_revenue_by_dentist_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/revenue/by-payer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Revenue By Payer */
+        get: operations["revenue_by_payer_api_v1_analytics_revenue_by_payer_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/appointments/status-trend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Status Trend */
+        get: operations["status_trend_api_v1_analytics_appointments_status_trend_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/appointments/heatmap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Heatmap */
+        get: operations["heatmap_api_v1_analytics_appointments_heatmap_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/appointments/lead-time": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lead Time */
+        get: operations["lead_time_api_v1_analytics_appointments_lead_time_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/patients/new-vs-returning": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** New Vs Returning */
+        get: operations["new_vs_returning_api_v1_analytics_patients_new_vs_returning_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/patients/retention-cohorts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retention Cohorts */
+        get: operations["retention_cohorts_api_v1_analytics_patients_retention_cohorts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/finance/ar-aging": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ar Aging */
+        get: operations["ar_aging_api_v1_analytics_finance_ar_aging_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/finance/collection-rate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Collection Rate */
+        get: operations["collection_rate_api_v1_analytics_finance_collection_rate_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/forecast/revenue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Forecast Endpoint
+         * @description The next three months of collected revenue with an 80 percent interval.
+         */
+        get: operations["forecast_endpoint_api_v1_analytics_forecast_revenue_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/no-show/upcoming-risk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Upcoming Risk
+         * @description Appointments in the next seven days with a no show score and the top reasons.
+         */
+        get: operations["upcoming_risk_api_v1_analytics_no_show_upcoming_risk_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/chatbot/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Chatbot Summary */
+        get: operations["chatbot_summary_api_v1_analytics_chatbot_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/revenue/by-weekday": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Revenue By Weekday */
+        get: operations["revenue_by_weekday_api_v1_analytics_revenue_by_weekday_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/revenue/service-trends": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Service Trends
+         * @description Every service with its revenue, visits and revenue per chair hour; the top ten with a series.
+         */
+        get: operations["service_trends_api_v1_analytics_revenue_service_trends_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/revenue/dentist-services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Dentist Services */
+        get: operations["dentist_services_api_v1_analytics_revenue_dentist_services_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/dentists/leaderboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Leaderboard */
+        get: operations["leaderboard_api_v1_analytics_dentists_leaderboard_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/patients/demographics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Demographics
+         * @description Age bands and where patients came from, for patients with a completed visit in the range.
+         */
+        get: operations["demographics_api_v1_analytics_patients_demographics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/patients/top": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Top Patients
+         * @description Patients by lifetime billed amount. Receptionists see initials only.
+         */
+        get: operations["top_patients_api_v1_analytics_patients_top_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/appointments/channels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Channels */
+        get: operations["channels_api_v1_analytics_appointments_channels_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh
+         * @description Refresh the materialized views now instead of waiting for the nightly job.
+         */
+        post: operations["refresh_api_v1_analytics_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analytics/export/csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Csv
+         * @description Any table view as CSV. The same filters and the same permissions as the screen.
+         */
+        get: operations["export_csv_api_v1_analytics_export_csv_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/info": {
         parameters: {
             query?: never;
@@ -1066,11 +2232,96 @@ export interface components {
             message: string;
             appointment: components["schemas"]["LinkAppointmentOut"];
         };
+        /** AgingBucket */
+        AgingBucket: {
+            /** Label */
+            label: string;
+            /** Invoices */
+            invoices: number;
+            /** Insurer */
+            insurer: string;
+            /** Patient */
+            patient: string;
+            /** Total */
+            total: string;
+        };
+        /** Alerts */
+        Alerts: {
+            /** Unconfirmed Soon */
+            unconfirmed_soon: number;
+            /** New Inquiries */
+            new_inquiries: number;
+        };
         /**
          * AppointmentChannel
          * @enum {string}
          */
         AppointmentChannel: "web" | "chatbot" | "staff";
+        /** AppointmentDetail */
+        AppointmentDetail: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            status: components["schemas"]["AppointmentStatus"];
+            channel: components["schemas"]["AppointmentChannel"];
+            /**
+             * Start
+             * Format: date-time
+             */
+            start: string;
+            /**
+             * End
+             * Format: date-time
+             */
+            end: string;
+            /**
+             * Service Id
+             * Format: uuid
+             */
+            service_id: string;
+            /** Service Name */
+            service_name: string;
+            /**
+             * Dentist Id
+             * Format: uuid
+             */
+            dentist_id: string;
+            /** Dentist Name */
+            dentist_name: string;
+            /** Reason Note */
+            reason_note: string | null;
+            /** Late Cancel */
+            late_cancel: boolean;
+            /**
+             * Free Cancellation Until
+             * Format: date-time
+             */
+            free_cancellation_until: string;
+            /** Rescheduled From */
+            rescheduled_from: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Patient Id
+             * Format: uuid
+             */
+            patient_id: string;
+            /** Patient Name */
+            patient_name: string;
+            /** Patient Email */
+            patient_email: string | null;
+            /** Patient Phone */
+            patient_phone: string | null;
+            /** Clinical Note */
+            clinical_note: string | null;
+            /** Recent Visits */
+            recent_visits: components["schemas"]["AppointmentOut"][];
+        };
         /** AppointmentOut */
         AppointmentOut: {
             /**
@@ -1126,6 +2377,21 @@ export interface components {
          * @enum {string}
          */
         AppointmentStatus: "booked" | "confirmed" | "checked_in" | "completed" | "cancelled" | "no_show";
+        /** ArAging */
+        ArAging: {
+            meta: components["schemas"]["Meta"];
+            /**
+             * As Of
+             * Format: date
+             */
+            as_of: string;
+            /** Buckets */
+            buckets: components["schemas"]["AgingBucket"][];
+            /** Total Outstanding */
+            total_outstanding: string;
+            /** Over 90 Share */
+            over_90_share: number | null;
+        };
         /** ArAgingBucketOut */
         ArAgingBucketOut: {
             /** Bucket */
@@ -1201,6 +2467,24 @@ export interface components {
             /** Recovery Codes */
             recovery_codes?: string[] | null;
         };
+        /** BillingSettings */
+        "BillingSettings-Input": {
+            /** Tax Rate Percent */
+            tax_rate_percent: number | string;
+            /** Receptionist Max Discount Percent */
+            receptionist_max_discount_percent: number | string;
+            /** Monthly Revenue Target */
+            monthly_revenue_target: number | string;
+        };
+        /** BillingSettings */
+        "BillingSettings-Output": {
+            /** Tax Rate Percent */
+            tax_rate_percent: string;
+            /** Receptionist Max Discount Percent */
+            receptionist_max_discount_percent: string;
+            /** Monthly Revenue Target */
+            monthly_revenue_target: string;
+        };
         /** BookingRequest */
         BookingRequest: {
             /**
@@ -1222,6 +2506,29 @@ export interface components {
             hold_token: string;
             /** Reason Note */
             reason_note?: string | null;
+        };
+        /** BookingSettings */
+        BookingSettings: {
+            /** Min Notice Hours */
+            min_notice_hours: number;
+            /** Max Horizon Days */
+            max_horizon_days: number;
+            /** Same Day Enabled */
+            same_day_enabled: boolean;
+            /** Buffer Minutes */
+            buffer_minutes: number;
+            /** Slot Grid Minutes */
+            slot_grid_minutes: number;
+            /** Cancellation Free Hours */
+            cancellation_free_hours: number;
+        };
+        /** ByPayer */
+        ByPayer: {
+            meta: components["schemas"]["Meta"];
+            /** By Payer Type */
+            by_payer_type: components["schemas"]["RevenueRow"][];
+            /** By Provider */
+            by_provider: components["schemas"]["RevenueRow"][];
         };
         /** CancelRequest */
         CancelRequest: {
@@ -1257,6 +2564,291 @@ export interface components {
             /** New Password */
             new_password: string;
         };
+        /** ChannelRow */
+        ChannelRow: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Appointments */
+            appointments: number;
+            /** Completed */
+            completed: number;
+            /** Share */
+            share: number | null;
+        };
+        /** Channels */
+        Channels: {
+            meta: components["schemas"]["Meta"];
+            /** Rows */
+            rows: components["schemas"]["ChannelRow"][];
+        };
+        /** ChatDay */
+        ChatDay: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Conversations */
+            conversations: number;
+            /** Turns */
+            turns: number;
+            /** Zero Llm Turns */
+            zero_llm_turns: number;
+            /** Tokens */
+            tokens: number;
+        };
+        /** ChatMessageOut */
+        ChatMessageOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            role: components["schemas"]["ChatRole"];
+            /** Content */
+            content: string;
+            /** Intent */
+            intent: string | null;
+            route: components["schemas"]["ChatRoute"] | null;
+            /** Quick Replies */
+            quick_replies: components["schemas"]["QuickReplyOut"][];
+            /** Links */
+            links: components["schemas"]["LinkOut"][];
+            /** Input Hint */
+            input_hint: string | null;
+            /** Picker */
+            picker: string | null;
+            /** Feedback */
+            feedback: ("up" | "down") | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** ChatMetrics */
+        ChatMetrics: {
+            /** Days */
+            days: number;
+            /** Conversations */
+            conversations: number;
+            /** Turns */
+            turns: number;
+            /** Zero Llm Turns */
+            zero_llm_turns: number;
+            /** Zero Llm Share */
+            zero_llm_share: number | null;
+            /** Llm Calls */
+            llm_calls: number;
+            /** Tokens */
+            tokens: number;
+            /** Tokens Per Conversation */
+            tokens_per_conversation: number | null;
+            /** Tokens Per Booking */
+            tokens_per_booking: number | null;
+            /** Funnel Started */
+            funnel_started: number;
+            /** Funnel Slot Chosen */
+            funnel_slot_chosen: number;
+            /** Funnel Confirmed */
+            funnel_confirmed: number;
+            /** Handoffs */
+            handoffs: number;
+            /** Feedback Up */
+            feedback_up: number;
+            /** Feedback Down */
+            feedback_down: number;
+            /** Providers */
+            providers: components["schemas"]["ProviderShare"][];
+            /** Unanswered */
+            unanswered: components["schemas"]["UnansweredQuestion"][];
+        };
+        /** ChatReplyOut */
+        ChatReplyOut: {
+            /**
+             * Message Id
+             * Format: uuid
+             */
+            message_id: string;
+            /** Text */
+            text: string;
+            route: components["schemas"]["ChatRoute"];
+            /** Intent */
+            intent: string | null;
+            /** Quick Replies */
+            quick_replies: components["schemas"]["QuickReplyOut"][];
+            /** Links */
+            links: components["schemas"]["LinkOut"][];
+            /** Input Hint */
+            input_hint: string | null;
+            /** Picker */
+            picker: string | null;
+            /** Degraded */
+            degraded: boolean;
+            /** Flow */
+            flow: string | null;
+            /** Step */
+            step: string | null;
+        };
+        /**
+         * ChatRole
+         * @enum {string}
+         */
+        ChatRole: "user" | "assistant" | "system";
+        /**
+         * ChatRoute
+         * @enum {string}
+         */
+        ChatRoute: "rule" | "cache" | "faq_direct" | "llm" | "handoff";
+        /** ChatSessionRow */
+        ChatSessionRow: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Messages */
+            messages: number;
+            /** Thumbs Up */
+            thumbs_up: number;
+            /** Thumbs Down */
+            thumbs_down: number;
+            /** First Message */
+            first_message: string | null;
+            /** Provider Last */
+            provider_last: string | null;
+        };
+        /** ChatbotSummary */
+        ChatbotSummary: {
+            meta: components["schemas"]["Meta"];
+            /** Conversations */
+            conversations: number;
+            /** Turns */
+            turns: number;
+            /** Zero Llm Turns */
+            zero_llm_turns: number;
+            /** Zero Llm Share */
+            zero_llm_share: number | null;
+            /** Resolved Without Human */
+            resolved_without_human: number | null;
+            /** Booking Started */
+            booking_started: number;
+            /** Booking Slot Chosen */
+            booking_slot_chosen: number;
+            /** Booking Confirmed */
+            booking_confirmed: number;
+            /** Booking Conversion */
+            booking_conversion: number | null;
+            /** Handoffs */
+            handoffs: number;
+            /** Providers */
+            providers: components["schemas"]["ProviderTokens"][];
+            /** Failovers */
+            failovers: number;
+            /** Feedback Up */
+            feedback_up: number;
+            /** Feedback Down */
+            feedback_down: number;
+            /** Feedback Score */
+            feedback_score: number | null;
+            /** Tokens Per Conversation */
+            tokens_per_conversation: number | null;
+            /**
+             * Days
+             * @default []
+             */
+            days: components["schemas"]["ChatDay"][];
+            /**
+             * Unanswered
+             * @default []
+             */
+            unanswered: components["schemas"]["Unanswered"][];
+        };
+        /**
+         * ChoiceIn
+         * @description A button the visitor clicked: what kind of choice it was, and its value.
+         */
+        ChoiceIn: {
+            /** Kind */
+            kind: string;
+            /** Value */
+            value: string;
+            /**
+             * Label
+             * @default
+             */
+            label: string;
+        };
+        /** ClinicInfo */
+        ClinicInfo: {
+            /** Name */
+            name: string;
+            /** Address */
+            address: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email: string;
+            /** Timezone */
+            timezone: string;
+        };
+        /** ClinicalNote */
+        ClinicalNote: {
+            /** Note */
+            note: string;
+        };
+        /** CohortRow */
+        CohortRow: {
+            /**
+             * Cohort Month
+             * Format: date
+             */
+            cohort_month: string;
+            /** Cohort Size */
+            cohort_size: number;
+            /** Retention */
+            retention: (number | null)[];
+            /** Returned Within 6 Months */
+            returned_within_6_months: number | null;
+        };
+        /** CollectionPoint */
+        CollectionPoint: {
+            /**
+             * Period
+             * Format: date
+             */
+            period: string;
+            /** Billed */
+            billed: string;
+            /** Collected To Date */
+            collected_to_date: string;
+            /** Rate */
+            rate: number | null;
+        };
+        /** CollectionRate */
+        CollectionRate: {
+            meta: components["schemas"]["Meta"];
+            /** Points */
+            points: components["schemas"]["CollectionPoint"][];
+            /** Overall Rate */
+            overall_rate: number | null;
+            /** Average Days To Collect */
+            average_days_to_collect?: number | null;
+        };
+        /** CompleteRequest */
+        CompleteRequest: {
+            /** Performed Service Ids */
+            performed_service_ids?: string[];
+            /** Clinical Note */
+            clinical_note?: string | null;
+        };
         /** ContactRequest */
         ContactRequest: {
             /** Name */
@@ -1268,6 +2860,17 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** CreateSessionResponse */
+        CreateSessionResponse: {
+            /**
+             * Session Id
+             * Format: uuid
+             */
+            session_id: string;
+            /** Session Token */
+            session_token: string;
+            greeting: components["schemas"]["ChatReplyOut"];
+        };
         /** DayAvailabilityOut */
         DayAvailabilityOut: {
             /**
@@ -1277,6 +2880,36 @@ export interface components {
             date: string;
             /** Slots */
             slots: components["schemas"]["SlotOut"][];
+        };
+        /** Demographics */
+        Demographics: {
+            meta: components["schemas"]["Meta"];
+            /** Patients */
+            patients: number;
+            /** Age Bands */
+            age_bands: components["schemas"]["Slice"][];
+            /** Sources */
+            sources: components["schemas"]["Slice"][];
+        };
+        /** DentistAdminOut */
+        DentistAdminOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Full Name */
+            full_name: string;
+            /** Specialty */
+            specialty: string;
+            /** Color */
+            color: string;
+            /** Is Active */
+            is_active: boolean;
+            /** User Id */
+            user_id: string | null;
+            /** Service Ids */
+            service_ids: string[];
         };
         /** DentistOut */
         DentistOut: {
@@ -1296,6 +2929,44 @@ export interface components {
             /** Color */
             color: string;
         };
+        /** DentistServiceCell */
+        DentistServiceCell: {
+            /** Dentist Id */
+            dentist_id: string;
+            /** Dentist */
+            dentist: string;
+            /** Service Id */
+            service_id: string;
+            /** Service */
+            service: string;
+            /** Billed */
+            billed: string;
+        };
+        /** DentistServiceMatrix */
+        DentistServiceMatrix: {
+            meta: components["schemas"]["Meta"];
+            /** Cells */
+            cells: components["schemas"]["DentistServiceCell"][];
+        };
+        /** DentistUpdate */
+        DentistUpdate: {
+            /** Is Active */
+            is_active?: boolean | null;
+            /** Specialty */
+            specialty?: string | null;
+            /** Color */
+            color?: string | null;
+            /** Service Ids */
+            service_ids?: string[] | null;
+        };
+        /** DuplicateCandidate */
+        DuplicateCandidate: {
+            patient: components["schemas"]["PatientSummary"];
+            /** Score */
+            score: number;
+            /** Reasons */
+            reasons: string[];
+        };
         /**
          * ErrorResponse
          * @description Uniform error body returned by every failing endpoint.
@@ -1309,6 +2980,38 @@ export interface components {
             details?: unknown;
             /** Request Id */
             request_id?: string | null;
+        };
+        /**
+         * ExceptionReason
+         * @enum {string}
+         */
+        ExceptionReason: "leave" | "holiday" | "training";
+        /** FeedbackRequest */
+        FeedbackRequest: {
+            /**
+             * Message Id
+             * Format: uuid
+             */
+            message_id: string;
+            /**
+             * Rating
+             * @enum {string}
+             */
+            rating: "up" | "down";
+        };
+        /** ForecastPoint */
+        ForecastPoint: {
+            /**
+             * Month
+             * Format: date
+             */
+            month: string;
+            /** Value */
+            value: number;
+            /** Lower */
+            lower?: number | null;
+            /** Upper */
+            upper?: number | null;
         };
         /** ForgotPasswordRequest */
         ForgotPasswordRequest: {
@@ -1364,6 +3067,10 @@ export interface components {
              * @default false
              */
             marketing_consent: boolean;
+            /** Insurance Provider Id */
+            insurance_provider_id?: string | null;
+            /** Insurance Member Id */
+            insurance_member_id?: string | null;
         };
         /** GuestVerificationRequest */
         GuestVerificationRequest: {
@@ -1391,6 +3098,27 @@ export interface components {
         HealthResponse: {
             /** Status */
             status: string;
+        };
+        /** HeatCell */
+        HeatCell: {
+            /** Weekday */
+            weekday: number;
+            /** Hour */
+            hour: number;
+            /** Appointments */
+            appointments: number;
+            /** No Show */
+            no_show: number;
+            /** No Show Rate */
+            no_show_rate: number | null;
+        };
+        /** Heatmap */
+        Heatmap: {
+            meta: components["schemas"]["Meta"];
+            /** Cells */
+            cells: components["schemas"]["HeatCell"][];
+            /** Max Appointments */
+            max_appointments: number;
         };
         /** HoldRequest */
         HoldRequest: {
@@ -1440,6 +3168,37 @@ export interface components {
             version: string;
             /** Environment */
             environment: string;
+        };
+        /** InsuranceProviderOut */
+        InsuranceProviderOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Plan Types */
+            plan_types: string[];
+        };
+        /** IntentExampleCreate */
+        IntentExampleCreate: {
+            /** Intent */
+            intent: string;
+            /** Text */
+            text: string;
+        };
+        /** IntentExampleOut */
+        IntentExampleOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Intent */
+            intent: string;
+            /** Text */
+            text: string;
         };
         /** InvoiceItemCreate */
         InvoiceItemCreate: {
@@ -1658,6 +3417,99 @@ export interface components {
              */
             reembed: boolean;
         };
+        /** Kpi */
+        Kpi: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /**
+             * Unit
+             * @enum {string}
+             */
+            unit: "usd" | "percent" | "count" | "days";
+            /** Value */
+            value: number | null;
+            /** Previous */
+            previous: number | null;
+            /** Change Percent */
+            change_percent: number | null;
+            /**
+             * Change Kind
+             * @enum {string}
+             */
+            change_kind: "relative" | "points";
+            /** Higher Is Better */
+            higher_is_better: boolean;
+            /** Sparkline */
+            sparkline: components["schemas"]["SparkPoint"][];
+        };
+        /** LeadBucket */
+        LeadBucket: {
+            /** Label */
+            label: string;
+            /** Appointments */
+            appointments: number;
+            /** Share */
+            share: number | null;
+        };
+        /** LeadTime */
+        LeadTime: {
+            meta: components["schemas"]["Meta"];
+            /** Buckets */
+            buckets: components["schemas"]["LeadBucket"][];
+            /** Average Days */
+            average_days: number | null;
+            /** Median Days */
+            median_days: number | null;
+            /** Appointments */
+            appointments: number;
+        };
+        /** LeaderRow */
+        LeaderRow: {
+            /** Dentist Id */
+            dentist_id: string;
+            /** Dentist */
+            dentist: string;
+            /** Billed */
+            billed: string;
+            /** Collected */
+            collected: string;
+            /** Visits */
+            visits: number;
+            /** No Shows */
+            no_shows: number;
+            /** No Show Rate */
+            no_show_rate: number | null;
+            /** Booked Hours */
+            booked_hours: number;
+            /** Available Hours */
+            available_hours: number;
+            /** Utilization */
+            utilization: number | null;
+            /** Revenue Per Visit */
+            revenue_per_visit: number | null;
+        };
+        /** Leaderboard */
+        Leaderboard: {
+            meta: components["schemas"]["Meta"];
+            /** Rows */
+            rows: components["schemas"]["LeaderRow"][];
+        };
+        /**
+         * LimitsRequest
+         * @description Provider limits. ``null`` means unknown: no local limit is enforced for that window.
+         */
+        LimitsRequest: {
+            /** Rpm */
+            rpm?: number | null;
+            /** Rpd */
+            rpd?: number | null;
+            /** Tpm */
+            tpm?: number | null;
+            /** Tpd */
+            tpd?: number | null;
+        };
         /**
          * LinkAppointmentOut
          * @description The few appointment details shown to the holder of an email link.
@@ -1683,6 +3535,13 @@ export interface components {
              * Format: date-time
              */
             free_cancellation_until: string;
+        };
+        /** LinkOut */
+        LinkOut: {
+            /** Label */
+            label: string;
+            /** Url */
+            url: string;
         };
         /** LoginRequest */
         LoginRequest: {
@@ -1715,6 +3574,31 @@ export interface components {
         MessageResponse: {
             /** Message */
             message: string;
+        };
+        /** Meta */
+        Meta: {
+            /**
+             * Date From
+             * Format: date
+             */
+            date_from: string;
+            /**
+             * Date To
+             * Format: date
+             */
+            date_to: string;
+            /**
+             * Granularity
+             * @enum {string}
+             */
+            granularity: "day" | "week" | "month" | "quarter";
+            /** Data As Of */
+            data_as_of: string | null;
+            /**
+             * Cached
+             * @default false
+             */
+            cached: boolean;
         };
         /** MfaDisableRequest */
         MfaDisableRequest: {
@@ -1765,6 +3649,32 @@ export interface components {
             code?: string | null;
             /** Recovery Code */
             recovery_code?: string | null;
+        };
+        /** NewReturningPoint */
+        NewReturningPoint: {
+            /**
+             * Period
+             * Format: date
+             */
+            period: string;
+            /** New Patients */
+            new_patients: number;
+            /** Returning Patients */
+            returning_patients: number;
+            /** New Visits */
+            new_visits: number;
+            /** Returning Visits */
+            returning_visits: number;
+        };
+        /** NewVsReturning */
+        NewVsReturning: {
+            meta: components["schemas"]["Meta"];
+            /** Points */
+            points: components["schemas"]["NewReturningPoint"][];
+            /** New Patients */
+            new_patients: number;
+            /** Returning Patients */
+            returning_patients: number;
         };
         /** NewsletterRequest */
         NewsletterRequest: {
@@ -1821,6 +3731,35 @@ export interface components {
             email?: string | null;
             /** @default walk_in */
             source: components["schemas"]["PatientSource"];
+        };
+        /** PatientHistory */
+        PatientHistory: {
+            /** Appointments */
+            appointments: components["schemas"]["AppointmentOut"][];
+            /** Invoices */
+            invoices: components["schemas"]["InvoiceListItem"][];
+        };
+        /** PatientNoteCreate */
+        PatientNoteCreate: {
+            /** Body */
+            body: string;
+        };
+        /** PatientNoteOut */
+        PatientNoteOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Body */
+            body: string;
+            /** Author */
+            author: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** PatientProfile */
         PatientProfile: {
@@ -1944,6 +3883,102 @@ export interface components {
             /** Sandbox */
             sandbox: boolean;
         };
+        /** Performance */
+        Performance: {
+            /** Days */
+            days: number;
+            /** Visits */
+            visits: number;
+            /** Revenue */
+            revenue: string;
+            /** No Shows */
+            no_shows: number;
+            /** No Show Rate */
+            no_show_rate: number;
+        };
+        /** PriceChangeCreate */
+        PriceChangeCreate: {
+            /** Price */
+            price: number | string;
+            /**
+             * Effective From
+             * Format: date
+             */
+            effective_from: string;
+        };
+        /** PriceChangeOut */
+        PriceChangeOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Price */
+            price: string;
+            /**
+             * Effective From
+             * Format: date
+             */
+            effective_from: string;
+            /** Applied At */
+            applied_at: string | null;
+        };
+        /** PrimaryRequest */
+        PrimaryRequest: {
+            /**
+             * Provider
+             * @enum {string}
+             */
+            provider: "groq" | "gemini";
+        };
+        /** ProviderShare */
+        ProviderShare: {
+            /** Provider */
+            provider: string;
+            /** Calls */
+            calls: number;
+            /** Tokens */
+            tokens: number;
+        };
+        /** ProviderTokens */
+        ProviderTokens: {
+            /** Provider */
+            provider: string;
+            /** Calls */
+            calls: number;
+            /** Tokens */
+            tokens: number;
+            /** Failovers */
+            failovers: number;
+        };
+        /** ProviderUsageRow */
+        ProviderUsageRow: {
+            /** Provider */
+            provider: string;
+            /** Status */
+            status: string;
+            /** Calls */
+            calls: number;
+            /** Prompt Tokens */
+            prompt_tokens: number;
+            /** Completion Tokens */
+            completion_tokens: number;
+            /** Cached Tokens */
+            cached_tokens: number;
+            /** Average Latency Ms */
+            average_latency_ms: number;
+            /** Failovers */
+            failovers: number;
+        };
+        /** QuickReplyOut */
+        QuickReplyOut: {
+            /** Label */
+            label: string;
+            /** Kind */
+            kind: string;
+            /** Value */
+            value: string;
+        };
         /** ReadyResponse */
         ReadyResponse: {
             /** Status */
@@ -1957,6 +3992,13 @@ export interface components {
         RecoveryCodesResponse: {
             /** Recovery Codes */
             recovery_codes: string[];
+        };
+        /** RefreshResult */
+        RefreshResult: {
+            /** Refreshed */
+            refreshed: number;
+            /** Failed */
+            failed: number;
         };
         /** RegisterRequest */
         RegisterRequest: {
@@ -2014,6 +4056,20 @@ export interface components {
             /** Error */
             error: string | null;
         };
+        /** ReminderResult */
+        ReminderResult: {
+            /** Message */
+            message: string;
+        };
+        /** ReminderSettings */
+        ReminderSettings: {
+            /** Hours Before */
+            hours_before: number[];
+            /** Followup Days */
+            followup_days: number;
+            /** Recall Months */
+            recall_months: number;
+        };
         /**
          * ReminderStatus
          * @enum {string}
@@ -2038,6 +4094,127 @@ export interface components {
             /** New Password */
             new_password: string;
         };
+        /** RetentionCohorts */
+        RetentionCohorts: {
+            meta: components["schemas"]["Meta"];
+            /** Cohorts */
+            cohorts: components["schemas"]["CohortRow"][];
+            /** Six Month Retention */
+            six_month_retention: number | null;
+            /** Mature Cohorts */
+            mature_cohorts: number;
+        };
+        /** RetentionSettings */
+        RetentionSettings: {
+            /** Chat Retention Days */
+            chat_retention_days: number;
+            /** Guest Anonymize Months */
+            guest_anonymize_months: number;
+        };
+        /** RevenueBreakdown */
+        RevenueBreakdown: {
+            meta: components["schemas"]["Meta"];
+            /** Rows */
+            rows: components["schemas"]["RevenueRow"][];
+        };
+        /** RevenueForecast */
+        RevenueForecast: {
+            meta: components["schemas"]["Meta"];
+            /**
+             * Method
+             * @enum {string}
+             */
+            method: "holt_winters" | "seasonal_naive" | "naive";
+            /** Method Note */
+            method_note: string;
+            /** Interval Level */
+            interval_level: number;
+            /** History */
+            history: components["schemas"]["ForecastPoint"][];
+            /** Forecast */
+            forecast: components["schemas"]["ForecastPoint"][];
+        };
+        /** RevenuePoint */
+        RevenuePoint: {
+            /**
+             * Period
+             * Format: date
+             */
+            period: string;
+            /** Billed */
+            billed: string;
+            /** Collected */
+            collected: string;
+            /** Prior Year Billed */
+            prior_year_billed: string;
+            /** Prior Year Collected */
+            prior_year_collected: string;
+        };
+        /** RevenueRow */
+        RevenueRow: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Billed */
+            billed: string;
+            /** Collected */
+            collected: string;
+            /** Invoices */
+            invoices: number;
+            /** Share Of Billed */
+            share_of_billed: number | null;
+        };
+        /** RevenueTrend */
+        RevenueTrend: {
+            meta: components["schemas"]["Meta"];
+            /** Points */
+            points: components["schemas"]["RevenuePoint"][];
+        };
+        /** RiskDriver */
+        RiskDriver: {
+            /** Feature */
+            feature: string;
+            /** Label */
+            label: string;
+            /** Contribution */
+            contribution: number;
+        };
+        /** RiskRow */
+        RiskRow: {
+            /**
+             * Appointment Id
+             * Format: uuid
+             */
+            appointment_id: string;
+            /**
+             * Start
+             * Format: date-time
+             */
+            start: string;
+            /** Patient Name */
+            patient_name: string;
+            /** Service Name */
+            service_name: string;
+            /**
+             * Dentist Id
+             * Format: uuid
+             */
+            dentist_id: string;
+            /** Dentist Name */
+            dentist_name: string;
+            /** Status */
+            status: string;
+            /** Score */
+            score: number;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "high" | "medium" | "low";
+            /** Drivers */
+            drivers: components["schemas"]["RiskDriver"][];
+        };
         /** RoleChangeRequest */
         RoleChangeRequest: {
             role: components["schemas"]["UserRole"];
@@ -2050,6 +4227,30 @@ export interface components {
              */
             id: string;
             role: components["schemas"]["UserRole"];
+        };
+        /** ScheduleDay */
+        ScheduleDay: {
+            /** Weekday */
+            weekday: number;
+            /**
+             * Start Time
+             * Format: time
+             */
+            start_time: string;
+            /**
+             * End Time
+             * Format: time
+             */
+            end_time: string;
+            /** Break Start */
+            break_start?: string | null;
+            /** Break End */
+            break_end?: string | null;
+        };
+        /** ScheduleReplace */
+        ScheduleReplace: {
+            /** Days */
+            days: components["schemas"]["ScheduleDay"][];
         };
         /** ScheduleResponse */
         ScheduleResponse: {
@@ -2086,6 +4287,71 @@ export interface components {
             /** Text */
             text: string;
         };
+        /** SendMessageRequest */
+        SendMessageRequest: {
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+            choice?: components["schemas"]["ChoiceIn"] | null;
+        };
+        /** SeriesPoint */
+        SeriesPoint: {
+            /**
+             * Period
+             * Format: date
+             */
+            period: string;
+            /** Value */
+            value: number;
+        };
+        /** ServiceAdminOut */
+        ServiceAdminOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** Description */
+            description: string | null;
+            /** Duration Min */
+            duration_min: number;
+            /** Base Price */
+            base_price: string;
+            /** Is Active */
+            is_active: boolean;
+            /** Display Order */
+            display_order: number;
+            /** Price Changes */
+            price_changes: components["schemas"]["PriceChangeOut"][];
+        };
+        /** ServiceCreate */
+        ServiceCreate: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** Description */
+            description?: string | null;
+            /** Duration Min */
+            duration_min: number;
+            /** Base Price */
+            base_price: number | string;
+            /**
+             * Display Order
+             * @default 0
+             */
+            display_order: number;
+        };
         /** ServiceOut */
         ServiceOut: {
             /**
@@ -2106,6 +4372,122 @@ export interface components {
             /** Base Price */
             base_price: string;
         };
+        /** ServiceRow */
+        ServiceRow: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Category */
+            category: string;
+            /** Billed */
+            billed: string;
+            /** Collected */
+            collected: string;
+            /** Invoices */
+            invoices: number;
+            /** Visits */
+            visits: number;
+            /** Minutes */
+            minutes: number;
+            /** Revenue Per Hour */
+            revenue_per_hour: number | null;
+            /** Series */
+            series: components["schemas"]["SeriesPoint"][];
+        };
+        /** ServiceTrends */
+        ServiceTrends: {
+            meta: components["schemas"]["Meta"];
+            /** Rows */
+            rows: components["schemas"]["ServiceRow"][];
+        };
+        /** ServiceUpdate */
+        ServiceUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Category */
+            category?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Duration Min */
+            duration_min?: number | null;
+            /** Is Active */
+            is_active?: boolean | null;
+            /** Display Order */
+            display_order?: number | null;
+        };
+        /**
+         * SessionInfo
+         * @description One signed in browser or device of the user.
+         */
+        SessionInfo: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** User Agent */
+            user_agent: string | null;
+            /** Ip */
+            ip: string | null;
+            /**
+             * Last Active
+             * Format: date-time
+             */
+            last_active: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** Current */
+            current: boolean;
+        };
+        /** SessionOut */
+        SessionOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Flow */
+            flow: string | null;
+            /** Step */
+            step: string | null;
+            /** Messages */
+            messages: components["schemas"]["ChatMessageOut"][];
+        };
+        /** SettingsOut */
+        SettingsOut: {
+            clinic: components["schemas"]["ClinicInfo"];
+            booking: components["schemas"]["BookingSettings"];
+            reminders: components["schemas"]["ReminderSettings"];
+            billing: components["schemas"]["BillingSettings-Output"];
+            retention: components["schemas"]["RetentionSettings"];
+        };
+        /** SettingsUpdate */
+        SettingsUpdate: {
+            booking?: components["schemas"]["BookingSettings"] | null;
+            reminders?: components["schemas"]["ReminderSettings"] | null;
+            billing?: components["schemas"]["BillingSettings-Input"] | null;
+            retention?: components["schemas"]["RetentionSettings"] | null;
+        };
+        /** Slice */
+        Slice: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Patients */
+            patients: number;
+            /** Share */
+            share: number | null;
+        };
         /** SlotOut */
         SlotOut: {
             /**
@@ -2125,6 +4507,16 @@ export interface components {
             dentist_id: string;
             /** Dentist Name */
             dentist_name: string;
+        };
+        /** SparkPoint */
+        SparkPoint: {
+            /**
+             * Period
+             * Format: date
+             */
+            period: string;
+            /** Value */
+            value: number | null;
         };
         /** StaffAppointmentOut */
         StaffAppointmentOut: {
@@ -2229,11 +4621,113 @@ export interface components {
             /** Email */
             email?: string | null;
         };
+        /** StaffRescheduleRequest */
+        StaffRescheduleRequest: {
+            /**
+             * Start
+             * Format: date-time
+             */
+            start: string;
+            /** Dentist Id */
+            dentist_id?: string | null;
+        };
+        /** StaffUserCreate */
+        StaffUserCreate: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "admin" | "receptionist" | "dentist";
+            /** Full Name */
+            full_name?: string | null;
+            /**
+             * Specialty
+             * @default General dentistry
+             */
+            specialty: string;
+        };
+        /** StaffUserOut */
+        StaffUserOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Email */
+            email: string;
+            role: components["schemas"]["UserRole"];
+            /** Is Active */
+            is_active: boolean;
+            /** Mfa Enabled */
+            mfa_enabled: boolean;
+            /** Last Login At */
+            last_login_at: string | null;
+            /** Dentist Id */
+            dentist_id: string | null;
+            /** Dentist Name */
+            dentist_name: string | null;
+        };
+        /** StaffUserUpdate */
+        StaffUserUpdate: {
+            /** Is Active */
+            is_active: boolean;
+        };
         /** StatusChangeRequest */
         StatusChangeRequest: {
             status: components["schemas"]["AppointmentStatus"];
             /** Reason */
             reason?: string | null;
+        };
+        /** StatusPoint */
+        StatusPoint: {
+            /**
+             * Period
+             * Format: date
+             */
+            period: string;
+            /** Total */
+            total: number;
+            /** Completed */
+            completed: number;
+            /** Cancelled */
+            cancelled: number;
+            /** Late Cancelled */
+            late_cancelled: number;
+            /** No Show */
+            no_show: number;
+            /** Open */
+            open: number;
+            /** No Show Rate */
+            no_show_rate: number | null;
+            /** Cancellation Rate */
+            cancellation_rate: number | null;
+        };
+        /** StatusTrend */
+        StatusTrend: {
+            meta: components["schemas"]["Meta"];
+            /** Points */
+            points: components["schemas"]["StatusPoint"][];
+        };
+        /** Summary */
+        Summary: {
+            meta: components["schemas"]["Meta"];
+            /**
+             * Previous From
+             * Format: date
+             */
+            previous_from: string;
+            /**
+             * Previous To
+             * Format: date
+             */
+            previous_to: string;
+            /** Kpis */
+            kpis: components["schemas"]["Kpi"][];
         };
         /** TestimonialOut */
         TestimonialOut: {
@@ -2253,6 +4747,171 @@ export interface components {
             /** Body */
             body: string;
         };
+        /** TimeOffCreate */
+        TimeOffCreate: {
+            /**
+             * Starts At
+             * Format: date-time
+             */
+            starts_at: string;
+            /**
+             * Ends At
+             * Format: date-time
+             */
+            ends_at: string;
+            reason: components["schemas"]["ExceptionReason"];
+            /** Note */
+            note?: string | null;
+        };
+        /** TimeOffCreated */
+        TimeOffCreated: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Starts At
+             * Format: date-time
+             */
+            starts_at: string;
+            /**
+             * Ends At
+             * Format: date-time
+             */
+            ends_at: string;
+            reason: components["schemas"]["ExceptionReason"];
+            /** Note */
+            note: string | null;
+            /** Affected Appointments */
+            affected_appointments: number;
+        };
+        /** TimeOffOut */
+        TimeOffOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Starts At
+             * Format: date-time
+             */
+            starts_at: string;
+            /**
+             * Ends At
+             * Format: date-time
+             */
+            ends_at: string;
+            reason: components["schemas"]["ExceptionReason"];
+            /** Note */
+            note: string | null;
+        };
+        /** TopPatient */
+        TopPatient: {
+            /**
+             * Patient Id
+             * Format: uuid
+             */
+            patient_id: string;
+            /** Name */
+            name: string;
+            /** Lifetime Value */
+            lifetime_value: string;
+            /** Visits */
+            visits: number;
+            /** Last Visit */
+            last_visit: string | null;
+            /** Masked */
+            masked: boolean;
+        };
+        /** TopPatients */
+        TopPatients: {
+            meta: components["schemas"]["Meta"];
+            /** Rows */
+            rows: components["schemas"]["TopPatient"][];
+        };
+        /** Transcript */
+        Transcript: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Ended At */
+            ended_at: string | null;
+            /** Provider Last */
+            provider_last: string | null;
+            /** Masked */
+            masked: boolean;
+            /** Messages */
+            messages: components["schemas"]["TranscriptMessage"][];
+        };
+        /** TranscriptMessage */
+        TranscriptMessage: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Role */
+            role: string;
+            /** Content */
+            content: string;
+            /** Intent */
+            intent: string | null;
+            /** Route */
+            route: string | null;
+            /** Llm Calls */
+            llm_calls: number;
+            /** Feedback */
+            feedback: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** Unanswered */
+        Unanswered: {
+            /** Question */
+            question: string;
+            /** Count */
+            count: number;
+        };
+        /** UnansweredQuestion */
+        UnansweredQuestion: {
+            /** Question */
+            question: string;
+            /** Count */
+            count: number;
+        };
+        /** UpcomingRisk */
+        UpcomingRisk: {
+            meta: components["schemas"]["Meta"];
+            /** Model Version */
+            model_version: string | null;
+            /** Model Auc */
+            model_auc: number | null;
+            /** Base Rate */
+            base_rate: number | null;
+            /** Rows */
+            rows: components["schemas"]["RiskRow"][];
+            /** Note */
+            note: string | null;
+        };
+        /** UsageSummary */
+        UsageSummary: {
+            /** Hours */
+            hours: number;
+            /** Rows */
+            rows: components["schemas"]["ProviderUsageRow"][];
+        };
         /**
          * UserRole
          * @enum {string}
@@ -2267,6 +4926,25 @@ export interface components {
         VoidRequest: {
             /** Reason */
             reason: string;
+        };
+        /** WeekdayRevenue */
+        WeekdayRevenue: {
+            meta: components["schemas"]["Meta"];
+            /** Rows */
+            rows: components["schemas"]["WeekdayRow"][];
+        };
+        /** WeekdayRow */
+        WeekdayRow: {
+            /** Weekday */
+            weekday: number;
+            /** Billed */
+            billed: string;
+            /** Collected */
+            collected: string;
+            /** Invoices */
+            invoices: number;
+            /** Days */
+            days: number;
         };
     };
     responses: never;
@@ -2695,6 +5373,82 @@ export interface operations {
             query?: never;
             header?: never;
             path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_sessions_api_v1_auth_sessions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionInfo"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    revoke_session_api_v1_auth_sessions__session_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -3322,6 +6076,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DentistOut"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_insurance_providers_api_v1_public_insurance_providers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InsuranceProviderOut"][];
                 };
             };
             /** @description Unprocessable Entity */
@@ -4256,6 +7048,1444 @@ export interface operations {
             };
         };
     };
+    appointment_detail_api_v1_staff_appointments__appointment_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                appointment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AppointmentDetail"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    save_clinical_note_api_v1_staff_appointments__appointment_id__clinical_note_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                appointment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClinicalNote"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClinicalNote"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    complete_visit_api_v1_staff_appointments__appointment_id__complete_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                appointment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompleteRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffAppointmentOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reschedule_for_patient_api_v1_staff_appointments__appointment_id__reschedule_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                appointment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffRescheduleRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffAppointmentOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    patient_history_api_v1_patients__patient_id__history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                patient_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientHistory"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_patient_notes_api_v1_patients__patient_id__notes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                patient_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientNoteOut"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_patient_note_api_v1_patients__patient_id__notes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                patient_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PatientNoteCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PatientNoteOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    duplicate_candidates_api_v1_patients__patient_id__duplicates_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                patient_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DuplicateCandidate"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    my_performance_api_v1_staff_me_performance_get: {
+        parameters: {
+            query?: {
+                days?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Performance"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    alerts_api_v1_staff_alerts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Alerts"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    send_reminder_now_api_v1_staff_appointments__appointment_id__remind_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                appointment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReminderResult"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_staff_api_v1_admin_users_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffUserOut"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_staff_api_v1_admin_users_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffUserCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffUserOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_staff_api_v1_admin_users__user_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffUserUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffUserOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reset_staff_mfa_api_v1_admin_users__user_id__reset_mfa_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_services_api_v1_admin_services_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServiceAdminOut"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_service_api_v1_admin_services_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ServiceCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServiceAdminOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_service_api_v1_admin_services__service_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ServiceUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServiceAdminOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    schedule_price_change_api_v1_admin_services__service_id__price_changes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                service_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PriceChangeCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServiceAdminOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    cancel_price_change_api_v1_admin_services__service_id__price_changes__change_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                service_id: string;
+                change_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_dentists_api_v1_admin_dentists_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DentistAdminOut"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_dentist_api_v1_admin_dentists__dentist_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dentist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DentistUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DentistAdminOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_schedule_api_v1_admin_dentists__dentist_id__schedule_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dentist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleDay"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    replace_schedule_api_v1_admin_dentists__dentist_id__schedule_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dentist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleReplace"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleDay"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_time_off_api_v1_admin_dentists__dentist_id__time_off_get: {
+        parameters: {
+            query?: {
+                include_past?: boolean;
+            };
+            header?: never;
+            path: {
+                dentist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TimeOffOut"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_time_off_api_v1_admin_dentists__dentist_id__time_off_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dentist_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TimeOffCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TimeOffCreated"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    remove_time_off_api_v1_admin_time_off__time_off_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                time_off_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_intents_api_v1_admin_kb_intents_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntentExampleOut"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_intent_api_v1_admin_kb_intents_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IntentExampleCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntentExampleOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_intent_api_v1_admin_kb_intents__example_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                example_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_chat_sessions_api_v1_admin_chat_sessions_get: {
+        parameters: {
+            query?: {
+                feedback?: string;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatSessionRow"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_chat_transcript_api_v1_admin_chat_sessions__session_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Transcript"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    read_settings_api_v1_admin_settings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_settings_api_v1_admin_settings_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingsUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_audit_logs_api_v1_admin_audit_logs_export_csv_get: {
+        parameters: {
+            query?: {
+                action?: string | null;
+                actor_id?: string | null;
+                since?: string | null;
+                until?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     list_invoices_api_v1_billing_invoices_get: {
         parameters: {
             query?: {
@@ -4944,6 +9174,1507 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchHitOut"][];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    llm_status_api_v1_admin_llm_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_primary_api_v1_admin_llm_primary_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PrimaryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: string;
+                    };
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_limits_api_v1_admin_llm_limits__provider__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LimitsRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: number | null;
+                    };
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usage_api_v1_admin_llm_usage_get: {
+        parameters: {
+            query?: {
+                hours?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsageSummary"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_session_api_v1_chat_sessions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateSessionResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_session_api_v1_chat_sessions__session_id__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Chat-Token"?: string | null;
+            };
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    send_message_api_v1_chat_sessions__session_id__messages_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Chat-Token"?: string | null;
+            };
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SendMessageRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatReplyOut"];
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    give_feedback_api_v1_chat_sessions__session_id__feedback_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Chat-Token"?: string | null;
+            };
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FeedbackRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    metrics_api_v1_admin_chat_metrics_get: {
+        parameters: {
+            query?: {
+                days?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatMetrics"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    summary_api_v1_analytics_summary_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Summary"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    revenue_trend_api_v1_analytics_revenue_trend_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevenueTrend"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    revenue_by_service_api_v1_analytics_revenue_by_service_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevenueBreakdown"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    revenue_by_dentist_api_v1_analytics_revenue_by_dentist_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevenueBreakdown"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    revenue_by_payer_api_v1_analytics_revenue_by_payer_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ByPayer"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    status_trend_api_v1_analytics_appointments_status_trend_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StatusTrend"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    heatmap_api_v1_analytics_appointments_heatmap_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Heatmap"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    lead_time_api_v1_analytics_appointments_lead_time_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadTime"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    new_vs_returning_api_v1_analytics_patients_new_vs_returning_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewVsReturning"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    retention_cohorts_api_v1_analytics_patients_retention_cohorts_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetentionCohorts"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    ar_aging_api_v1_analytics_finance_ar_aging_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArAging"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    collection_rate_api_v1_analytics_finance_collection_rate_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionRate"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    forecast_endpoint_api_v1_analytics_forecast_revenue_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevenueForecast"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    upcoming_risk_api_v1_analytics_no_show_upcoming_risk_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpcomingRisk"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    chatbot_summary_api_v1_analytics_chatbot_summary_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatbotSummary"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    revenue_by_weekday_api_v1_analytics_revenue_by_weekday_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WeekdayRevenue"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    service_trends_api_v1_analytics_revenue_service_trends_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ServiceTrends"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    dentist_services_api_v1_analytics_revenue_dentist_services_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DentistServiceMatrix"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    leaderboard_api_v1_analytics_dentists_leaderboard_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Leaderboard"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    demographics_api_v1_analytics_patients_demographics_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Demographics"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    top_patients_api_v1_analytics_patients_top_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TopPatients"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    channels_api_v1_analytics_appointments_channels_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Channels"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    refresh_api_v1_analytics_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RefreshResult"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_csv_api_v1_analytics_export_csv_get: {
+        parameters: {
+            query: {
+                dataset: "summary" | "revenue_trend" | "by_service" | "by_dentist" | "by_payer" | "status_trend" | "heatmap" | "lead_time" | "new_returning" | "retention" | "ar_aging" | "collection" | "forecast" | "risk" | "chatbot" | "by_weekday" | "service_trends" | "dentist_services" | "leaderboard" | "demographics" | "top_patients" | "channels";
+                from?: string | null;
+                to?: string | null;
+                granularity?: "day" | "week" | "month" | "quarter";
+                dentist_id?: string | null;
+                service_id?: string | null;
+                payer_type?: ("patient" | "insurer") | null;
+                /** @description Treat this date as today. */
+                as_of?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Unprocessable Entity */

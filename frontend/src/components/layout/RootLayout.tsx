@@ -1,27 +1,48 @@
-import { Outlet } from 'react-router-dom'
+import * as React from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+
+import { CookieNotice } from '@/components/site/CookieNotice'
+import { FloatingActions } from '@/components/site/FloatingActions'
+import { Footer } from '@/components/site/Footer'
+import { Header, TopBar } from '@/components/site/Header'
+
+export const skipLinkClass =
+  'sr-only z-50 rounded-md bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:absolute focus:top-2 focus:left-2'
 
 export function RootLayout() {
+  const location = useLocation()
+  const main = React.useRef<HTMLElement>(null)
+
+  // After moving to another page, send focus to the content so keyboard and screen reader users
+  // start at the top of the new page rather than wherever the old link was. A link to a heading
+  // on the same page (an anchor) keeps its own behaviour.
+  const first = React.useRef(true)
+  React.useEffect(() => {
+    if (first.current) {
+      first.current = false
+      return
+    }
+    if (location.hash) {
+      document.getElementById(location.hash.slice(1))?.scrollIntoView()
+      return
+    }
+    main.current?.focus({ preventScroll: true })
+    window.scrollTo({ top: 0 })
+  }, [location.pathname, location.hash])
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <a
-        href="#main-content"
-        className="sr-only z-50 rounded-md bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:absolute focus:top-2 focus:left-2"
-      >
+    <div className="flex min-h-screen flex-col pb-14 md:pb-0">
+      <a href="#main-content" className={skipLinkClass}>
         Skip to main content
       </a>
-      <header className="border-b bg-white">
-        <div className="mx-auto flex h-16 max-w-[1240px] items-center px-4">
-          <span className="font-heading text-xl font-extrabold text-primary">
-            Meridian <span className="text-accent">Dental</span>
-          </span>
-        </div>
-      </header>
-      <main id="main-content" className="flex-1">
+      <TopBar />
+      <Header />
+      <main id="main-content" ref={main} tabIndex={-1} className="flex-1 focus:outline-none">
         <Outlet />
       </main>
-      <footer className="bg-primary text-sm text-primary-foreground/80">
-        <div className="mx-auto max-w-[1240px] px-4 py-6">Demo environment, fictional clinic.</div>
-      </footer>
+      <Footer />
+      <FloatingActions />
+      <CookieNotice />
     </div>
   )
 }

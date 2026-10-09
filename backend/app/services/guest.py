@@ -22,6 +22,7 @@ from app.services.mailer import Mailer
 OTP_TTL_MINUTES = 10
 OTP_MAX_ATTEMPTS = 5
 PHONE_FIELD = "patients.phone"
+MEMBER_FIELD = "patients.insurance_member_id"
 
 
 def _hash_code(secret: str, verification_id: uuid.UUID, code: str) -> str:
@@ -117,7 +118,15 @@ class GuestService:
         return row
 
     async def patient_for_guest(
-        self, *, email: str, first_name: str, last_name: str, phone: str | None, marketing: bool
+        self,
+        *,
+        email: str,
+        first_name: str,
+        last_name: str,
+        phone: str | None,
+        marketing: bool,
+        insurance_provider_id: uuid.UUID | None = None,
+        insurance_member_id: str | None = None,
     ) -> Patient:
         """The patient record for a verified address, created on first booking."""
         existing = (
@@ -134,6 +143,8 @@ class GuestService:
             phone_enc=self.cipher.encrypt_optional(phone, PHONE_FIELD),
             marketing_consent=marketing,
             source=PatientSource.WEB,
+            insurance_provider_id=insurance_provider_id,
+            insurance_member_id_enc=self.cipher.encrypt_optional(insurance_member_id, MEMBER_FIELD),
         )
         self.db.add(patient)
         await self.db.flush()

@@ -1,5 +1,6 @@
 import hmac
 import secrets
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request, Response
@@ -35,6 +36,7 @@ from app.schemas.auth import (
     RecoveryCodesResponse,
     RegisterRequest,
     ResetPasswordRequest,
+    SessionInfo,
     VerifyEmailRequest,
 )
 from app.services.auth import AuthService
@@ -251,6 +253,35 @@ async def logout(request: Request, service: Service, settings: AppSettings) -> R
     response = Response(status_code=204)
     clear_session_cookies(response, settings)
     return response
+
+
+# --- the user's own sessions ---------------------------------------------------------
+
+
+@router.get("/sessions", response_model=list[SessionInfo])
+async def list_sessions(
+    request: Request, current: Authenticated, service: Service
+) -> list[SessionInfo]:
+    rows = await service.list_sessions(current.id, request.cookies.get(REFRESH_COOKIE))
+    return [
+        SessionInfo(
+            id=row.family_id,
+            user_agent=row.user_agent,
+            ip=str(row.ip) if row.ip else None,
+            last_active=row.created_at,
+            expires_at=row.expires_at,
+            current=is_current,
+        )
+        for row, is_current in rows
+    ]
+
+
+@router.delete("/sessions/{session_id}", status_code=204)
+async def revoke_session(
+    session_id: uuid.UUID, current: Authenticated, service: Service
+) -> Response:
+    await service.revoke_session(current.id, session_id)
+    return Response(status_code=204)
 
 
 # --- password recovery -------------------------------------------------------------

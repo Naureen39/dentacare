@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
@@ -88,6 +89,17 @@ class RecoveryCodesResponse(BaseModel):
 class MfaSetupResponse(BaseModel):
     secret: str
     otpauth_uri: str
+
+
+class SessionInfo(BaseModel):
+    """One signed in browser or device of the user."""
+
+    id: uuid.UUID
+    user_agent: str | None
+    ip: str | None
+    last_active: datetime
+    expires_at: datetime
+    current: bool
 
 
 class MeResponse(BaseModel):

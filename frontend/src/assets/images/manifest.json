@@ -1,0 +1,98 @@
+{
+  "hero": {
+    "aspect": [16, 9],
+    "widths": [640, 1024, 1600]
+  },
+  "interior": {
+    "aspect": [4, 3],
+    "widths": [480, 800, 1200]
+  },
+  "technology": {
+    "aspect": [4, 3],
+    "widths": [480, 800, 1200]
+  },
+  "about": {
+    "aspect": [4, 3],
+    "widths": [480, 800, 1200]
+  },
+  "gallery-1": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "gallery-2": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "gallery-3": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "gallery-4": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "service-preventive": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "service-restorative": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "service-cosmetic": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "service-surgical": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "service-orthodontic": {
+    "aspect": [3, 2],
+    "widths": [400, 800]
+  },
+  "article-1": {
+    "aspect": [16, 9],
+    "widths": [480, 960]
+  },
+  "article-2": {
+    "aspect": [16, 9],
+    "widths": [480, 960]
+  },
+  "article-3": {
+    "aspect": [16, 9],
+    "widths": [480, 960]
+  },
+  "article-4": {
+    "aspect": [16, 9],
+    "widths": [480, 960]
+  },
+  "dentist-1": {
+    "aspect": [1, 1],
+    "widths": [160, 320]
+  },
+  "dentist-2": {
+    "aspect": [1, 1],
+    "widths": [160, 320]
+  },
+  "dentist-3": {
+    "aspect": [1, 1],
+    "widths": [160, 320]
+  },
+  "dentist-4": {
+    "aspect": [1, 1],
+    "widths": [160, 320]
+  },
+  "dentist-5": {
+    "aspect": [1, 1],
+    "widths": [160, 320]
+  },
+  "dentist-6": {
+    "aspect": [1, 1],
+    "widths": [160, 320]
+  },
+  "dentist-7": {
+    "aspect": [1, 1],
+    "widths": [160, 320]
+  }
+}

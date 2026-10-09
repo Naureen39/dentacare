@@ -30,6 +30,12 @@ class DentistOut(BaseModel):
     color: str
 
 
+class InsuranceProviderOut(BaseModel):
+    id: uuid.UUID
+    name: str
+    plan_types: list[str]
+
+
 class SlotOut(BaseModel):
     start: datetime
     end: datetime
@@ -142,6 +148,10 @@ class GuestBookingRequest(BookingRequest):
     phone: str | None = Field(default=None, max_length=40)
     consent: bool
     marketing_consent: bool = False
+    # Optional. Kept only for a patient record created by this booking, never written over an
+    # existing record, because the caller has proved control of the address and nothing more.
+    insurance_provider_id: uuid.UUID | None = None
+    insurance_member_id: str | None = Field(default=None, max_length=60)
 
 
 # --- public site ---------------------------------------------------------------------

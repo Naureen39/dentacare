@@ -17,6 +17,8 @@ htmlcov/
 # Node
 node_modules/
 dist/
+dist-audit
+dist-server/
 *.tsbuildinfo
 coverage/
 playwright-report/

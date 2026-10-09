@@ -5,7 +5,16 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist', 'src/lib/api-types.ts'] },
+  {
+    ignores: [
+      'dist',
+      'dist-audit',
+      'dist-server',
+      'playwright-report',
+      'test-results',
+      'src/lib/api-types.ts',
+    ],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -17,5 +26,14 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-imports': 'error',
     },
   },
-  { files: ['src/app/routes.tsx'], rules: { 'react-refresh/only-export-components': 'off' } },
+  {
+    // Component libraries and providers export variants, hooks and helpers beside components.
+    files: [
+      'src/app/routes.tsx',
+      'src/components/ui/**',
+      'src/lib/auth.tsx',
+      'src/lib/auth-forms.tsx',
+    ],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
 )

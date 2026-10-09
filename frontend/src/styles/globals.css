@@ -5,26 +5,51 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Design tokens.
+ *
+ * The brand colours from the design brief are kept as they are for fills, charts and large
+ * decoration. Where a colour carries text, or sits under white text, a "strong" variant is used
+ * that meets WCAG 2.2 AA (4.5:1 for normal text, 3:1 for large text and interface parts).
+ * src/styles/contrast.test.ts checks every pair listed there against this file.
+ */
 :root {
   --background: #fafbfc;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
-  --primary: #0b2545;
+
+  --primary: #0b2545; /* deep navy */
   --primary-foreground: #ffffff;
-  --secondary: #e8f6f5;
+  --secondary: #e8f6f5; /* soft mint */
   --secondary-foreground: #0b2545;
   --muted: #f1f5f9;
   --muted-foreground: #475569;
-  --accent: #13a3a1;
-  --accent-foreground: #ffffff;
-  --destructive: #d64545;
+
+  --accent: #13a3a1; /* clinical teal: fills, icons, large display text */
+  --accent-foreground: #0b2545;
+  --accent-strong: #0b7371; /* teal for text, links and buttons with white text */
+  --accent-strong-foreground: #ffffff;
+
   --success: #1e9e6a;
+  --success-strong: #12704a;
+  --success-soft: #e3f5ec;
   --warning: #e39b1d;
+  --warning-strong: #8a5a00;
+  --warning-soft: #fdf3dc;
+  --danger: #d64545; /* brand red for fills and charts */
+  --destructive: #b42323; /* red for text and buttons with white text */
+  --destructive-soft: #fbeaea;
+
   --border: #e2e8f0;
-  --input: #cbd5e1;
-  --ring: #13a3a1;
+  --input: #78879d; /* 3.6:1 against white, above the 3:1 needed for form control edges */
+  --ring: #0b7371;
   --radius: 0.75rem;
+
+  --shadow-soft: 0 1px 2px rgb(11 37 69 / 0.04), 0 4px 12px rgb(11 37 69 / 0.05);
+  --shadow-raised:
+    0 2px 4px rgb(11 37 69 / 0.05), 0 12px 28px rgb(11 37 69 / 0.1),
+    0 24px 48px rgb(11 37 69 / 0.06);
 }
 
 @theme inline {
@@ -40,22 +65,39 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-strong-foreground: var(--accent-strong-foreground);
   --color-success: var(--success);
+  --color-success-strong: var(--success-strong);
+  --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
+  --color-warning-strong: var(--warning-strong);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-raised: var(--shadow-raised);
+
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --max-width-page: 1240px;
 }
 
 @layer base {
   * {
     @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background font-sans text-foreground antialiased;
@@ -65,19 +107,62 @@
   h2,
   h3,
   h4 {
-    @apply font-heading text-primary;
+    @apply font-heading font-bold text-primary;
+    line-height: 1.25;
+  }
+  /* Large headings are set tighter, as the brief asks. */
+  h1,
+  h2,
+  .text-3xl,
+  .text-4xl,
+  .text-5xl,
+  .text-6xl {
     line-height: 1.15;
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
   }
+  /* Links in running text are identifiable without relying on colour alone. */
+  p a:not([class]),
+  li a:not([class]) {
+    @apply text-accent-strong underline underline-offset-2 hover:text-primary;
+  }
+}
+
+/* Page container: 12 column grid, 1240px wide, 8px based spacing. */
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--max-width-page);
+  padding-inline: 1rem;
+  @media (min-width: 768px) {
+    padding-inline: 1.5rem;
+  }
+}
+
+/* Vertical rhythm between page sections: 56px on phones, 96px from the tablet width up. */
+@utility section-space {
+  padding-block: 3.5rem;
+  @media (min-width: 768px) {
+    padding-block: 6rem;
+  }
+}
+
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

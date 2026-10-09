@@ -18,8 +18,12 @@ x-backend-env: &backend-env
   GEMINI_API_KEY: ${GEMINI_API_KEY:-}
   GEMINI_MODEL: ${GEMINI_MODEL:-}
   LLM_PRIMARY: ${LLM_PRIMARY:-groq}
+  LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-8}
+  GROQ_REASONING_HEADROOM: ${GROQ_REASONING_HEADROOM:-100}
+  GEMINI_THINKING_BUDGET: ${GEMINI_THINKING_BUDGET:-0}
   EMBED_MODEL: ${EMBED_MODEL:-BAAI/bge-small-en-v1.5}
   EMBED_CACHE_DIR: /models
+  MODEL_DIR: /models/analytics
   KB_DIR: /data/kb
   INTENTS_FILE: /data/intents.yaml
   SMTP_HOST: ${SMTP_HOST:-mailpit}
@@ -30,6 +34,7 @@ x-backend-env: &backend-env
   CLINIC_NAME: ${CLINIC_NAME:-Meridian Dental Care}
   CLINIC_ADDRESS: ${CLINIC_ADDRESS:-1200 Harbor View Drive, Suite 300, Springfield, NY 10001}
   CLINIC_PHONE: ${CLINIC_PHONE:-(555) 010-0199}
+  CLINIC_EMERGENCY_PHONE: ${CLINIC_EMERGENCY_PHONE:-(555) 010-0911}
   CLINIC_EMAIL: ${CLINIC_EMAIL:-frontdesk@meridian.test}
   MAIL_FROM: ${MAIL_FROM:-no-reply@meridian.test}
 

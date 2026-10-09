@@ -30,8 +30,23 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model: str = ""
     llm_primary: Literal["groq", "gemini"] = "groq"
+    groq_base_url: str = "https://api.groq.com/openai/v1"
+    llm_timeout_seconds: float = Field(default=8.0, gt=0)
+    # Daily quotas reset on a provider specific clock. Gemini documents midnight Pacific time;
+    # Groq does not document a time zone, so UTC is assumed and can be changed here.
+    groq_reset_tz: str = "UTC"
+    gemini_reset_tz: str = "America/Los_Angeles"
+    # gpt-oss models count hidden reasoning against the completion limit, so the request asks
+    # for this many extra tokens. The visible answer is still cut to the purpose budget.
+    groq_reasoning_headroom: int = Field(default=100, ge=0)
+    # 0 switches Gemini thinking off for models that support it; a negative value omits the setting.
+    gemini_thinking_budget: int = 0
+    llm_circuit_failures: int = Field(default=3, ge=1)
+    llm_circuit_open_seconds: int = Field(default=60, ge=1)
     embed_model: str = "BAAI/bge-small-en-v1.5"
     embed_cache_dir: str = "models"
+    # Trained analytics models (the no show model) are kept here, one file per version.
+    model_dir: str = "models/analytics"
     embed_preload: bool = True
     kb_dir: str = "../data/kb"
     intents_file: str = "../data/intents.yaml"
@@ -45,6 +60,7 @@ class Settings(BaseSettings):
     clinic_name: str = "Meridian Dental Care"
     clinic_address: str = "1200 Harbor View Drive, Suite 300, Springfield, NY 10001"
     clinic_phone: str = "(555) 010-0199"
+    clinic_emergency_phone: str = "(555) 010-0911"
     clinic_email: str = "frontdesk@meridian.test"
     mail_from: str = "no-reply@meridian.test"
 

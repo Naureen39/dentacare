@@ -602,6 +602,52 @@ class AuthService:
         await audit.record(self.db, AuditAction.LOGOUT, request=self.request, actor_id=row.user_id)
         await self.db.commit()
 
+    # --- the user's own sessions ------------------------------------------------------
+
+    async def list_sessions(
+        self, user_id: uuid.UUID, current_raw: str | None
+    ) -> list[tuple[RefreshToken, bool]]:
+        """Each signed in device once: a family has exactly one live token at a time."""
+        rows = (
+            (
+                await self.db.execute(
+                    select(RefreshToken)
+                    .where(
+                        RefreshToken.user_id == user_id,
+                        RefreshToken.revoked_at.is_(None),
+                        RefreshToken.expires_at > self._now(),
+                    )
+                    .order_by(RefreshToken.created_at.desc())
+                )
+            )
+            .scalars()
+            .all()
+        )
+        current = hash_token(current_raw) if current_raw else None
+        return [(row, row.token_hash == current) for row in rows]
+
+    async def revoke_session(self, user_id: uuid.UUID, family_id: uuid.UUID) -> None:
+        """End one of the user's own sessions. Someone else's session is reported as missing."""
+        result = await self.db.execute(
+            update(RefreshToken)
+            .where(
+                RefreshToken.user_id == user_id,
+                RefreshToken.family_id == family_id,
+                RefreshToken.revoked_at.is_(None),
+            )
+            .values(revoked_at=self._now())
+        )
+        if result.rowcount == 0:  # type: ignore[attr-defined]
+            raise AppError("not_found", "Session not found.", 404)
+        await audit.record(
+            self.db,
+            AuditAction.SESSION_REVOKE,
+            request=self.request,
+            actor_id=user_id,
+            metadata={"family_id": str(family_id)},
+        )
+        await self.db.commit()
+
     # --- password recovery and change -----------------------------------------------
 
     async def forgot_password(self, email: str) -> None:

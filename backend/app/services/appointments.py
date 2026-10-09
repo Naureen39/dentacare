@@ -319,7 +319,7 @@ class AppointmentService:
         self,
         appointment: Appointment,
         patient: Patient,
-        actor: CurrentUser,
+        actor: CurrentUser | None,
         *,
         start: datetime,
         dentist_id: uuid.UUID | None,
@@ -360,6 +360,53 @@ class AppointmentService:
             rescheduled_from=appointment.id,
         )
         return new
+
+    async def reschedule_staff(
+        self,
+        appointment: Appointment,
+        actor: CurrentUser,
+        *,
+        start: datetime,
+        dentist_id: uuid.UUID | None,
+    ) -> Appointment:
+        """Move a visit for the patient, from the schedule. Booking rules are not applied.
+
+        The old visit is cancelled without a late flag (the clinic chose the move) and the new one
+        is booked in the same transaction, so a clash leaves the original untouched.
+        """
+        now = datetime.now(UTC)
+        self._require_future_and_cancellable(appointment, now)
+        patient = (
+            await self.db.execute(select(Patient).where(Patient.id == appointment.patient_id))
+        ).scalar_one()
+        service = (
+            await self.db.execute(select(Service).where(Service.id == appointment.service_id))
+        ).scalar_one()
+        previous = appointment.status
+        appointment.status = AppointmentStatus.CANCELLED
+        appointment.cancel_reason = "Rescheduled by staff"
+        await self._record_history(appointment, previous, actor)
+        await self._audit(
+            AuditAction.APPOINTMENT_RESCHEDULE,
+            appointment,
+            actor,
+            {"from": previous.value, "by": "staff"},
+        )
+        await ReminderScheduler(self.db).cancel_pending(appointment.id)
+        await self.db.flush()
+        return await self.book(
+            patient=patient,
+            service=service,
+            dentist_id=dentist_id or appointment.dentist_id,
+            start=start,
+            channel=appointment.channel,
+            actor=actor,
+            reason_note=appointment.reason_note,
+            hold_token=None,
+            require_hold=False,
+            enforce_rules=False,
+            rescheduled_from=appointment.id,
+        )
 
     def _require_future_and_cancellable(self, appointment: Appointment, now: datetime) -> None:
         if appointment.status not in CANCELLABLE:

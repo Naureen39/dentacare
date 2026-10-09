@@ -1,5 +1,6 @@
 """Import every model so that Base.metadata is complete for Alembic and tests."""
 
+from app.db.models.analytics import AppointmentRisk, ModelRegistry
 from app.db.models.billing import Invoice, InvoiceItem, Payment
 from app.db.models.chat import ChatMessage, ChatSession, LlmUsage
 from app.db.models.clinic import (
@@ -8,8 +9,10 @@ from app.db.models.clinic import (
     DentistService,
     InsuranceProvider,
     Patient,
+    PatientNote,
     ScheduleException,
     Service,
+    ServicePriceChange,
 )
 from app.db.models.identity import (
     AuthToken,
@@ -34,7 +37,10 @@ from app.db.models.scheduling import (
 )
 
 __all__ = [
+    "PatientNote",
+    "ServicePriceChange",
     "Appointment",
+    "AppointmentRisk",
     "AppointmentActionToken",
     "AppointmentStatusHistory",
     "AppSetting",
@@ -54,6 +60,7 @@ __all__ = [
     "KbChunk",
     "KbDocument",
     "LlmUsage",
+    "ModelRegistry",
     "MfaRecoveryCode",
     "NewsletterSubscriber",
     "Patient",

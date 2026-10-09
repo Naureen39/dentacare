@@ -4,28 +4,23 @@ Every task takes the worker context as its first argument. The context holds the
 factory, settings, mailer and the ARQ Redis pool; tests pass their own.
 """
 
-import re
 import uuid
-from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import structlog
 from arq import Retry
-from sqlalchemy import func, select, text
-from sqlalchemy.dialects.postgresql import Range
-from sqlalchemy.ext.asyncio import AsyncEngine
 
+from app.analytics.noshow import model as noshow
+from app.analytics.refresh import refresh_views
 from app.core.config import Settings
-from app.db.enums import AppointmentStatus
-from app.db.models import Appointment
+from app.core.crypto import FieldCipher
 from app.services.notifications import MAX_TRIES, NotificationService
 from app.services.reminders import ReminderScheduler
 from app.services.retention import run_retention
 
 logger = structlog.get_logger(__name__)
-
-MATERIALIZED_VIEW_NAME = re.compile(r"^mv_[a-z0-9_]+$")
-SCORING_HORIZON_DAYS = 7
 
 
 async def ping(ctx: dict[str, Any]) -> str:
@@ -67,71 +62,26 @@ async def dispatch_due_reminders(ctx: dict[str, Any]) -> int:
 
 
 async def refresh_analytics(ctx: dict[str, Any]) -> dict[str, int]:
-    """Nightly: refresh every materialized view whose name starts with ``mv_``.
-
-    The analytics phase creates those views. Until then there is nothing to refresh. Views with
-    a unique index are refreshed concurrently so dashboards keep working during the refresh.
-    """
-    engine: AsyncEngine = ctx["engine"]
-    refreshed = failed = 0
-    async with engine.connect() as connection:
-        connection = await connection.execution_options(isolation_level="AUTOCOMMIT")
-        names = (
-            (
-                await connection.execute(
-                    text(
-                        "SELECT matviewname FROM pg_matviews "
-                        "WHERE schemaname = 'public' AND matviewname LIKE 'mv\\_%' ORDER BY matviewname"
-                    )
-                )
-            )
-            .scalars()
-            .all()
-        )
-        for name in names:
-            if not MATERIALIZED_VIEW_NAME.fullmatch(name):
-                continue
-            try:
-                try:
-                    await connection.execute(
-                        text(f'REFRESH MATERIALIZED VIEW CONCURRENTLY "{name}"')  # noqa: S608
-                    )
-                except Exception:  # noqa: BLE001  (no unique index, or never populated)
-                    await connection.execute(text(f'REFRESH MATERIALIZED VIEW "{name}"'))
-                refreshed += 1
-            except Exception:  # noqa: BLE001
-                failed += 1
-                logger.error("materialized_view_refresh_failed", view=name)
-    logger.info("analytics_refreshed", refreshed=refreshed, failed=failed)
-    return {"refreshed": refreshed, "failed": failed}
+    """Nightly: refresh the analytics materialized views, concurrently where possible."""
+    result = await refresh_views(ctx["engine"])
+    redis = ctx.get("redis")
+    if redis is not None:
+        await redis.incr("analytics:version")  # stored responses were built from the old figures
+    return result
 
 
 async def score_no_show_risk(ctx: dict[str, Any]) -> dict[str, object]:
-    """Nightly: score appointments in the next seven days for no show risk.
-
-    The model is trained and registered in the analytics phase. Until a model exists this job
-    only reports how many appointments are waiting to be scored.
-    """
-    now = datetime.now(UTC)
+    """Nightly: score appointments in the next seven days for no show risk."""
+    settings: Settings = ctx["settings"]
+    cipher = FieldCipher.from_settings(
+        settings.field_encryption_key, settings.field_encryption_old_keys, settings.jwt_secret
+    )
     async with ctx["session_factory"]() as db:
-        waiting = (
-            await db.execute(
-                select(func.count())
-                .select_from(Appointment)
-                .where(
-                    Appointment.status.in_([AppointmentStatus.BOOKED, AppointmentStatus.CONFIRMED]),
-                    Appointment.slot.overlaps(
-                        Range(now, now + timedelta(days=SCORING_HORIZON_DAYS), bounds="[)")
-                    ),
-                )
-            )
-        ).scalar_one()
-        model = (await db.execute(text("SELECT to_regclass('public.model_registry')"))).scalar_one()
-    if model is None:
-        logger.info("no_show_scoring_skipped", reason="no model registered", waiting=waiting)
-        return {"scored": 0, "waiting": waiting, "skipped": "no model registered"}
-    logger.info("no_show_scoring_skipped", reason="scoring arrives with the analytics phase")
-    return {"scored": 0, "waiting": waiting, "skipped": "scoring not available yet"}
+        result = await noshow.score_upcoming(
+            db, cipher, Path(settings.model_dir), ZoneInfo(settings.clinic_tz)
+        )
+    logger.info("no_show_scoring_done", **result)
+    return result
 
 
 async def retention_purge(ctx: dict[str, Any]) -> dict[str, int]:

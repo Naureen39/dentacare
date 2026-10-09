@@ -72,4 +72,11 @@ Revision `0001` seeds `app_settings` with booking rules (minimum notice, horizon
 Use `127.0.0.1` rather than `localhost` on Windows: resolving `localhost` first tries IPv6 and adds about a second to every connection.
 
 
+Revision `0007` adds `llm_usage.cached_tokens` and `fallback_from`, seeds the Groq limits and unset Gemini limits as settings, and removes the seeded `llm_primary` row so `LLM_PRIMARY` is the default.
+
 Revision `0006` adds `kb_documents.embedded_hash`, `embedded_at` and `managed_by`, and makes `(intent, text)` unique in `intent_examples`.
+
+Revision `0009` adds `model_registry` (trained models with checksum and metrics), `appointment_risk` (the latest no show score and reasons of an upcoming appointment), the function `clinic_date(timestamptz)` and the ten analytics materialized views listed in [analytics.md](analytics.md). Views and the function are not tracked by Alembic autogenerate, so they live only in the migration. Calendar days in the views follow `CLINIC_TZ` at the time the migration runs.
+
+Revision `0008` adds `chat_messages.llm_calls`, `payload` (the buttons shown with a reply) and `feedback` (1 or -1).
+

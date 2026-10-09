@@ -25,6 +25,7 @@ class AuditAction:
     LOGIN_FAILED = "auth.login_failed"
     LOGIN_LOCKED = "auth.account_locked"
     LOGOUT = "auth.logout"
+    SESSION_REVOKE = "auth.session_revoke"
     REGISTER = "auth.register"
     EMAIL_VERIFIED = "auth.email_verified"
     PASSWORD_CHANGE = "auth.password_change"  # noqa: S105
@@ -46,6 +47,19 @@ class AuditAction:
     ROLE_CHANGE = "user.role_change"
     EXPORT = "data.export"
     AUDIT_VIEW = "audit.view"
+    ANALYTICS_REFRESH = "analytics.refresh"
+    ANALYTICS_RISK_VIEW = "analytics.risk_view"
+    USER_CREATE = "user.create"
+    USER_UPDATE = "user.update"
+    MFA_RESET = "auth.mfa_reset"
+    SERVICE_CHANGE = "service.change"
+    DENTIST_CHANGE = "dentist.change"
+    SETTINGS_CHANGE = "settings.change"
+    KB_CHANGE = "kb.change"
+    CHAT_REVIEW = "chat.review"
+    CLINICAL_NOTE = "clinical_note.save"
+    PATIENT_NOTE = "patient_note.add"
+    REMINDER_MANUAL = "reminder.manual"
 
 
 def email_fingerprint(email: str) -> str:

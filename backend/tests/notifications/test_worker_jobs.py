@@ -108,63 +108,50 @@ async def test_send_task_requests_an_arq_retry_when_delivery_fails(practice: Pra
 # --- nightly jobs ------------------------------------------------------------------------------
 
 
-async def test_analytics_refresh_does_nothing_until_views_exist(practice: Practice) -> None:
-    assert await refresh_analytics(worker_ctx(practice)) == {"refreshed": 0, "failed": 0}
+async def test_analytics_refresh_updates_every_analytics_view(practice: Practice) -> None:
+    ctx = practice.ctx
+    assert await refresh_analytics(worker_ctx(practice)) == {"refreshed": 10, "failed": 0}
+    before = await ctx.fetch("SELECT count(*) FROM mv_cohort_retention")
+    assert before == [(0,)]
+    await ctx.execute("DELETE FROM app_settings WHERE key = 'analytics_refreshed_at'")
+    await refresh_analytics(worker_ctx(practice))
+    stamp = await ctx.fetch(
+        "SELECT value #>> '{}' FROM app_settings WHERE key = 'analytics_refreshed_at'"
+    )
+    assert stamp and stamp[0][0]  # dashboards use it to show how fresh the data is
 
 
-async def test_analytics_refresh_updates_materialized_views_concurrently(
+async def test_analytics_refresh_falls_back_when_a_view_cannot_refresh_concurrently(
     practice: Practice,
 ) -> None:
     ctx = practice.ctx
-    await ctx.execute(
-        "CREATE MATERIALIZED VIEW mv_test_patients AS SELECT count(*) AS n, 1 AS k FROM patients"
-    )
-    await ctx.execute("CREATE UNIQUE INDEX ix_mv_test_patients_k ON mv_test_patients (k)")
-    await ctx.execute(
-        "CREATE MATERIALIZED VIEW mv_test_plain AS SELECT count(*) AS n FROM patients"
-    )
-    await ctx.execute("CREATE MATERIALIZED VIEW other_view AS SELECT count(*) AS n FROM patients")
+    await ctx.execute("DROP INDEX uq_mv_ar_aging")  # concurrent refresh needs a unique index
     try:
-        assert (await ctx.fetch("SELECT n FROM mv_test_patients")) == [(1,)]
-        await ctx.execute("INSERT INTO patients (first_name, last_name) VALUES ('Extra', 'Person')")
-
-        result = await refresh_analytics(worker_ctx(practice))
-
-        assert result == {
-            "refreshed": 2,
-            "failed": 0,
-        }  # the view without the mv_ prefix is left alone
-        assert (await ctx.fetch("SELECT n FROM mv_test_patients")) == [(2,)]
-        assert (await ctx.fetch("SELECT n FROM mv_test_plain")) == [(2,)]
-        assert (await ctx.fetch("SELECT n FROM other_view")) == [(1,)]
+        assert await refresh_analytics(worker_ctx(practice)) == {"refreshed": 10, "failed": 0}
     finally:
-        for name in ("mv_test_patients", "mv_test_plain", "other_view"):
-            await ctx.execute(f"DROP MATERIALIZED VIEW IF EXISTS {name}")
+        await ctx.execute("CREATE UNIQUE INDEX uq_mv_ar_aging ON mv_ar_aging (invoice_id)")
 
 
 async def test_analytics_refresh_counts_views_that_fail(practice: Practice) -> None:
     ctx = practice.ctx
-    await ctx.execute("CREATE TABLE tmp_source (n int)")
-    await ctx.execute("CREATE MATERIALIZED VIEW mv_test_broken AS SELECT n FROM tmp_source")
+    await ctx.execute(
+        "CREATE OR REPLACE FUNCTION clinic_date(moment timestamptz) RETURNS date "
+        "LANGUAGE plpgsql IMMUTABLE AS $$ BEGIN RAISE EXCEPTION 'simulated failure'; END $$"
+    )
     try:
-        await ctx.execute(
-            "ALTER TABLE tmp_source RENAME TO tmp_source_renamed"
-        )  # view keeps working
         result = await refresh_analytics(worker_ctx(practice))
-        assert result["refreshed"] + result["failed"] == 1
+        assert result["failed"] >= 1 and result["refreshed"] + result["failed"] == 10
     finally:
-        await ctx.execute("DROP MATERIALIZED VIEW IF EXISTS mv_test_broken")
-        await ctx.execute("DROP TABLE IF EXISTS tmp_source_renamed")
-        await ctx.execute("DROP TABLE IF EXISTS tmp_source")
+        await ctx.execute(
+            "CREATE OR REPLACE FUNCTION clinic_date(moment timestamptz) RETURNS date "
+            "LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$ SELECT (moment AT TIME ZONE 'America/New_York')::date $$"
+        )
 
 
-async def test_no_show_scoring_reports_waiting_appointments_until_a_model_exists(
-    practice: Practice,
-) -> None:
+async def test_no_show_scoring_waits_until_a_model_exists(practice: Practice) -> None:
     await appointment_in(practice, 30)
     result = await score_no_show_risk(worker_ctx(practice))
-    assert result["scored"] == 0 and result["waiting"] == 1
-    assert result["skipped"] == "no model registered"
+    assert result == {"scored": 0, "skipped": "no model registered"}
 
 
 async def test_retention_task_uses_the_settings_in_the_context(practice: Practice) -> None:

@@ -28,6 +28,16 @@ dependencies = [
     "icalendar>=7.3.0",
     "fastembed>=0.9.0",
     "pyyaml>=6.0.3",
+    "openai>=3.26.1",
+    "google-genai>=2.29.0",
+    "dateparser>=1.4.3",
+    "pandas>=3.0.6",
+    "numpy>=2.5.3",
+    "statsmodels>=0.15.0",
+    "lightgbm>=4.7.0",
+    "scikit-learn>=1.9.1",
+    "joblib>=1.6.0",
+    "faker>=40.41.0",
 ]
 
 [dependency-groups]
@@ -43,6 +53,8 @@ dev = [
     "fakeredis>=2.39.0",
     "pypdf>=6.19.0",
     "types-pyyaml>=6.0.12.20260906",
+    "types-dateparser>=1.4.3.20260907",
+    "pandas-stubs>=3.0.5.260914",
 ]
 
 [tool.uv]
@@ -60,6 +72,11 @@ ignore = ["E501", "S105", "S106", "S107"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S105", "S106", "S107", "S311", "S608"]
+# The analytics SQL is assembled only from fixed fragments and a whitelisted granularity; every
+# value from a request is a bound parameter.
+"app/analytics/service.py" = ["S608"]
+# The generator is a seeded simulation, not security code.
+"scripts/generate_data.py" = ["S311"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -68,13 +85,15 @@ plugins = ["pydantic.mypy"]
 exclude = ["app/db/migrations"]
 
 [[tool.mypy.overrides]]
-module = ["asyncpg", "asyncpg.*", "pgvector.*", "reportlab", "reportlab.*"]
+module = ["asyncpg", "asyncpg.*", "pgvector.*", "reportlab", "reportlab.*", "statsmodels", "statsmodels.*", "joblib", "sklearn", "sklearn.*", "lightgbm", "lightgbm.*"]
 ignore_missing_imports = true
 
 [tool.bandit]
 # Hardcoded password checks fire on identifiers such as token type names; secrets come
 # from the environment and gitleaks scans the repository.
-skips = ["B105", "B106", "B107"]
+# B608 flags SQL built from f-strings. The analytics queries assemble only fixed fragments and a
+# whitelisted granularity; every request value is a bound parameter (see app/analytics/service.py).
+skips = ["B105", "B106", "B107", "B608"]
 # Migrations build SQL only from constants defined in the same file.
 exclude_dirs = ["*/db/migrations", "*/db/migrations/*"]
 

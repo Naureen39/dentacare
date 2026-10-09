@@ -20,6 +20,11 @@ class FakeArqRedis:
 
     queued: list[tuple[str, tuple[Any, ...], str | None]] = field(default_factory=list)
     _ids: set[str] = field(default_factory=set)
+    counters: dict[str, int] = field(default_factory=dict)
+
+    async def incr(self, key: str) -> int:
+        self.counters[key] = self.counters.get(key, 0) + 1
+        return self.counters[key]
 
     async def enqueue_job(
         self, function: str, *args: Any, _job_id: str | None = None

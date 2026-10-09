@@ -2,7 +2,7 @@
 
 Clinic website, online booking, patient portal, staff console, revenue and analytics dashboard, and a support and booking assistant. The clinic is fictional and this is a demo environment.
 
-The full build plan is in [plan (2).md](<plan (2).md>). This repository currently contains **Phase 1 (Foundations)**, **Phase 2 (Database schema and migrations)** and **Phase 3 (Authentication, authorization and security baseline)** **Phase 4 (Core booking backend)** **Phase 5 (Billing and payments)** **Phase 6 (Notifications and background jobs)** and **Phase 7 (Knowledge base and embeddings)**.
+The full build plan is in [plan (2).md](<plan (2).md>). This repository currently contains **Phase 1 (Foundations)**, **Phase 2 (Database schema and migrations)** and **Phase 3 (Authentication, authorization and security baseline)** **Phase 4 (Core booking backend)** **Phase 5 (Billing and payments)** **Phase 6 (Notifications and background jobs)** **Phase 7 (Knowledge base and embeddings)**, **Phase 8 (LLM gateway)**, **Phase 9 (Chatbot orchestration)** **Phase 10 (Analytics backend, forecasting and no show model)** **Phase 11 (Frontend foundation and design system)** **Phase 12 (Public website)** **Phase 13 (Booking wizard and patient portal)**, **Phase 14 (Staff and admin console)** and **Phase 15 (Analytics dashboard)**.
 
 ## Quick start
 
@@ -65,6 +65,34 @@ Reminder emails, confirm and cancel links and the nightly jobs are documented in
 ## Knowledge base
 
 68 documents in `data/kb` and the intent examples in `data/intents.yaml` are indexed with `uv run python -m scripts.embed_kb`. See [docs/knowledge-base.md](docs/knowledge-base.md) for the format, search behaviour, administration endpoints and quality gates.
+
+## LLM gateway
+
+The single entry point to the language models (Groq first, Gemini as fallback) with budgets, failover and a circuit breaker is described in [docs/llm-gateway.md](docs/llm-gateway.md). Check real keys with `uv run python -m scripts.llm_smoke`.
+
+## Chat assistant
+
+Questions, bookings, reschedules and cancellations through a conversation that uses a language model only as a last resort. See [docs/chatbot.md](docs/chatbot.md).
+
+## Frontend
+
+The design system, the authentication client and the `/styleguide` route are described in [docs/frontend.md](docs/frontend.md). Run `npm run dev` in `frontend` and open `/styleguide`.
+
+The public website (pages, search engine markup, prerendering and the Lighthouse audit) is described in [docs/website.md](docs/website.md). Run `npm run audit:site` in `frontend` to check it.
+
+The booking wizard and the patient portal, and how to run their browser tests (`npm run test:e2e`), are described in [docs/booking-and-portal.md](docs/booking-and-portal.md).
+
+The staff and admin console is described in [docs/console.md](docs/console.md) and the analytics dashboard in [docs/analytics-dashboard.md](docs/analytics-dashboard.md).
+
+## Analytics
+
+Materialized views, the `/analytics` endpoints, the revenue forecast and the no show model are described in [docs/analytics.md](docs/analytics.md); every number is defined in [docs/metrics.md](docs/metrics.md). To load 24 months of demo data and train the model:
+
+```bash
+cd backend
+uv run python -m scripts.seed
+uv run python -m scripts.train_no_show
+```
 
 ## Development without Docker
 

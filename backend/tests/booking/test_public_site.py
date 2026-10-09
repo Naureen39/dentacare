@@ -242,3 +242,14 @@ async def test_testimonials_list_only_published_entries_newest_first(practice: P
     body = (await practice.ctx.client.get(f"{PUBLIC}/testimonials")).json()
     assert [t["first_name"] for t in body] == ["Anna"]
     assert set(body[0]) == {"id", "first_name", "last_initial", "treatment", "rating", "body"}
+
+
+async def test_insurance_providers_are_listed_by_name(practice: Practice) -> None:
+    await practice.ctx.execute(
+        "INSERT INTO insurance_providers (name, plan_types) VALUES "
+        "('Zenith Health', '{PPO}'), ('Alpine Mutual', '{HMO,PPO}')"
+    )
+    response = await practice.ctx.client.get(f"{PUBLIC}/insurance-providers")
+    assert response.status_code == 200
+    assert [p["name"] for p in response.json()] == ["Alpine Mutual", "Zenith Health"]
+    assert response.json()[0]["plan_types"] == ["HMO", "PPO"]

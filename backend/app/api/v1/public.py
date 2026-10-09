@@ -3,6 +3,7 @@
 import uuid
 from datetime import UTC, date, datetime, timedelta
 from typing import Annotated
+from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, Path, Query, Request
 from sqlalchemy import select
@@ -28,6 +29,7 @@ from app.db.models import (
     ContactInquiry,
     Dentist,
     DentistService,
+    InsuranceProvider,
     NewsletterSubscriber,
     Service,
     Testimonial,
@@ -45,6 +47,7 @@ from app.schemas.booking import (
     GuestVerificationResponse,
     HoldRequest,
     HoldResponse,
+    InsuranceProviderOut,
     LinkAppointmentOut,
     NewsletterRequest,
     ServiceOut,
@@ -53,6 +56,7 @@ from app.schemas.booking import (
 from app.services import audit, holds
 from app.services.appointment_links import AppointmentLinkService
 from app.services.appointments import AppointmentService, slot_out
+from app.services.console import apply_due_price_changes
 from app.services.guest import OTP_TTL_MINUTES
 
 router = APIRouter(prefix="/public", tags=["public"])
@@ -62,7 +66,8 @@ contact_limit = Depends(ip_rate_limit(contact_rule))
 
 
 @router.get("/services", response_model=list[ServiceOut])
-async def list_services(db: Session) -> list[ServiceOut]:
+async def list_services(db: Session, settings: AppSettings) -> list[ServiceOut]:
+    await apply_due_price_changes(db, datetime.now(ZoneInfo(settings.clinic_tz)).date())
     rows = (
         await db.execute(
             select(Service)
@@ -86,6 +91,12 @@ async def list_dentists(
         DentistOut.model_validate(r, from_attributes=True)
         for r in (await db.execute(stmt)).scalars()
     ]
+
+
+@router.get("/insurance-providers", response_model=list[InsuranceProviderOut])
+async def list_insurance_providers(db: Session) -> list[InsuranceProviderOut]:
+    rows = (await db.execute(select(InsuranceProvider).order_by(InsuranceProvider.name))).scalars()
+    return [InsuranceProviderOut.model_validate(r, from_attributes=True) for r in rows]
 
 
 @router.get("/availability", response_model=list[DayAvailabilityOut])
@@ -162,6 +173,8 @@ async def book_as_guest(
         last_name=body.last_name,
         phone=body.phone,
         marketing=body.marketing_consent,
+        insurance_provider_id=body.insurance_provider_id,
+        insurance_member_id=body.insurance_member_id,
     )
     verification.consumed_at = datetime.now(UTC)
     appointment = await appointments.book(

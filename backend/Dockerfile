@@ -9,6 +9,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 COPY --from=ghcr.io/astral-sh/uv:0.12 /uv /usr/local/bin/uv
 
+# LightGBM needs the OpenMP runtime, which the slim image does not include.
+RUN apt-get update \n    && apt-get install -y --no-install-recommends libgomp1 \n    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./

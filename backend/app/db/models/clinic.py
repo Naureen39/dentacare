@@ -1,11 +1,12 @@
 import uuid
-from datetime import datetime, time
+from datetime import date, datetime, time
 from decimal import Decimal
 
 from sqlalchemy import (
     ARRAY,
     Boolean,
     CheckConstraint,
+    Date,
     DateTime,
     ForeignKey,
     Index,
@@ -169,7 +170,46 @@ class DentistService(Base):
     )
 
 
+class ServicePriceChange(Base):
+    """A new price for a service from a given day. Due changes are applied to ``base_price``."""
+
+    __tablename__ = "service_price_changes"
+    __table_args__ = (
+        CheckConstraint("price >= 0", name="price_non_negative"),
+        Index("ix_service_price_changes_service_id", "service_id", "effective_from"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_pk()
+    service_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("services.id", ondelete="CASCADE"), nullable=False
+    )
+    price: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    effective_from: Mapped[date] = mapped_column(Date, nullable=False)
+    created_by: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL")
+    )
+    created_at: Mapped[datetime] = created_at_column()
+    applied_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class PatientNote(Base):
+    """A front desk note about a patient (a callback request, a billing arrangement). Encrypted."""
+
+    __tablename__ = "patient_notes"
+    __table_args__ = (Index("ix_patient_notes_patient_id", "patient_id", "created_at"),)
+
+    id: Mapped[uuid.UUID] = uuid_pk()
+    patient_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("patients.id", ondelete="CASCADE"), nullable=False
+    )
+    author_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
+    body_enc: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = created_at_column()
+
+
 __all__ = [
+    "PatientNote",
+    "ServicePriceChange",
     "Dentist",
     "DentistSchedule",
     "DentistService",

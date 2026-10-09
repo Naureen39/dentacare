@@ -17,7 +17,9 @@
 
 	handle {
 		root * /srv
-		try_files {path} /index.html
+		# Each public page is prerendered to its own index.html. Anything else (sign in, the
+		# account area, unknown addresses) gets the empty application shell, which draws the page.
+		try_files {path} {path}/index.html /app.html
 		file_server
 	}
 }
