@@ -39,7 +39,7 @@ The system is built as a modular monolith: one API, one background worker, one d
 | 3 | Give management trustworthy numbers | Every metric defined once in [docs/metrics.md](docs/metrics.md) and reconciled with SQL in tests |
 | 4 | Answer routine questions instantly and cheaply | Most chat turns use zero model calls, with budgets and failover for the rest |
 | 5 | Protect patient data | Role based access, field encryption, audit log, retention and anonymisation |
-| 6 | Stay fast and accessible | Read endpoints under 300 ms p95, WCAG checks on every public page |
+| 6 | Stay fast and accessible | Accessibility checks on public pages, cached analytics, performance targets tracked in Phase 17 |
 | 7 | Be easy to run and verify | One command to start, CI gates for lint, types, tests, scans and builds |
 
 ## What we build
@@ -101,7 +101,7 @@ flowchart LR
     %% ---------- API ----------
     subgraph API["<b>BACKEND API</b>  |  FastAPI, async SQLAlchemy"]
         direction TB
-        MW["<b>Middleware</b><br/>request ID, rate limit, CSRF, error shape"]
+        MW["<b>Middleware</b><br/>request ID, rate limits, CSRF, uniform errors"]
         AUTH["<b>Auth and RBAC</b><br/>JWT cookies, TOTP, audit"]
         BOOK["<b>Booking</b><br/>availability, holds, policy"]
         BILL["<b>Billing</b><br/>invoices, payments, PDFs"]
@@ -120,15 +120,14 @@ flowchart LR
     subgraph WORK["<b>BACKGROUND WORKER</b>  |  ARQ"]
         direction TB
         REM["<b>Reminders</b><br/>& retries"]
-        NIGHT["<b>Nightly jobs</b><br/>views refresh, retention, no show scoring, backups"]
+        NIGHT["<b>Nightly jobs</b><br/>analytics refresh, no show scoring,<br/>retention purge"]
     end
 
     %% ---------- Data ----------
     subgraph DATA["<b>DATA</b>"]
         direction TB
-        PG[("<b>PostgreSQL 16</b><br/>pgvector, RLS-ready schema,<br/>materialized views")]
+        PG[("<b>PostgreSQL 16</b><br/>pgvector, materialized views,<br/>constraints and audit log")]
         RD[("<b>Redis 7</b><br/>cache, rate limits,<br/>job queue, slot holds")]
-        BK[("<b>Backups</b><br/>nightly pg_dump,<br/>verified restore")]
     end
 
     %% ---------- External ----------
@@ -169,7 +168,6 @@ flowchart LR
     RD ==>|"jobs"| NIGHT
     REM --> PG
     NIGHT --> PG
-    NIGHT --> BK
     REM ==>|"email"| SMTP
     GW ==>|"only when rules and FAQ fail"| LLM
 
@@ -189,7 +187,7 @@ flowchart LR
     class MW,AUTH,BOOK,BILL,KB,ANA back
     class RULES,FAQ,GW ai
     class REM,NIGHT work
-    class PG,RD,BK data
+    class PG,RD data
     class LLM,SMTP ext
 
     style ACTORS fill:#f0f9ff,stroke:#0369a1,stroke-dasharray: 4 3
@@ -220,8 +218,8 @@ More detail is in [docs/architecture.md](docs/architecture.md).
 | Data | PostgreSQL 16 with pgvector, Redis 7 |
 | Background work | ARQ worker and scheduler |
 | Language models | Groq first, Gemini as fallback, behind one gateway |
-| Delivery | Docker Compose, Caddy with automatic TLS |
-| Quality | pytest, Vitest, Playwright, axe, ruff, mypy, ESLint, k6 |
+| Delivery | Docker Compose, Caddy with automatic TLS, GitHub Actions CI |
+| Quality | pytest, Vitest, Playwright, axe, ruff, mypy, ESLint |
 | Security tooling | Bandit, pip-audit, npm audit, Trivy, gitleaks |
 
 ## Quick start
@@ -331,8 +329,7 @@ Install the git hooks once with `pre-commit install`. CI runs the same checks pl
 backend/    FastAPI application, ARQ worker, tests
 frontend/   React, Vite, TypeScript, Tailwind, shadcn/ui
 data/       knowledge base, reference and generated datasets
-infra/      Docker Compose file, Caddyfile, backup scripts
-perf/       k6 load test scenarios
+infra/      Docker Compose file and Caddyfile
 docs/       architecture, conventions and runbooks
 scripts/    repository level tooling
 ```
