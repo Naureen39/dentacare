@@ -242,11 +242,15 @@ docker compose up --build
 
 If a host port is already in use, override it in `.env` with `API_PORT`, `WEB_PORT`, `DB_PORT`, `REDIS_PORT`, `MAILPIT_UI_PORT` or `MAILPIT_SMTP_PORT`.
 
-The production profile adds Caddy with automatic TLS and security headers:
+### Production
+
+The production overlay runs the API under Gunicorn, applies migrations on start, adds a persistent database volume, resource limits, restart policies, rotated logs, nightly backups and Caddy with automatic TLS and security headers. Set `SITE_ADDRESS`, `POSTGRES_PASSWORD`, `JWT_SECRET` and `FIELD_ENCRYPTION_KEY` in `.env`, then:
 
 ```bash
-SITE_ADDRESS=clinic.example.com docker compose --profile production up -d --build
+SEED_DEMO=1 docker compose -f compose.yaml -f compose.prod.yaml up -d --build
 ```
+
+`SEED_DEMO=1` loads 24 months of demo history on the first start, indexes the knowledge base and trains the no show model. Deployment, backup and restore, key rotation, switching the language model provider and updating the knowledge base are in [docs/runbook.md](docs/runbook.md). A scripted ten minute walk through the product is in [docs/demo.md](docs/demo.md).
 
 ### Development without Docker
 
@@ -283,6 +287,9 @@ uv run python -m scripts.embed_kb        # index the knowledge base
 
 | Topic | Guide |
 |---|---|
+| Deploy, back up, restore, rotate keys | [docs/runbook.md](docs/runbook.md) |
+| Demo script | [docs/demo.md](docs/demo.md) |
+| API reference | [docs/api.md](docs/api.md) |
 | Database schema and migrations | [docs/database.md](docs/database.md) |
 | Booking, holds, cancellation policy | [docs/booking.md](docs/booking.md) |
 | Billing and payments | [docs/billing.md](docs/billing.md) (clinic details on invoices come from `CLINIC_NAME`, `CLINIC_ADDRESS`, `CLINIC_PHONE`, `CLINIC_EMAIL`) |
@@ -326,17 +333,19 @@ Install the git hooks once with `pre-commit install`. CI runs the same checks pl
 ## Repository layout
 
 ```
-backend/    FastAPI application, ARQ worker, tests
-frontend/   React, Vite, TypeScript, Tailwind, shadcn/ui
-data/       knowledge base, reference and generated datasets
-infra/      Docker Compose file and Caddyfile
-docs/       architecture, conventions and runbooks
-scripts/    repository level tooling
+backend/             FastAPI application, ARQ worker, entrypoint script, tests
+frontend/            React, Vite, TypeScript, Tailwind, shadcn/ui
+data/                knowledge base, reference and generated datasets
+infra/               Docker Compose file, Caddyfile and backup scripts
+docs/                architecture, conventions, runbook and demo script
+scripts/             repository level tooling
+compose.yaml         development stack
+compose.prod.yaml    production overlay
 ```
 
 ## Project status
 
-Phases 1 to 16 are complete: foundations, database, authentication, booking, billing, notifications, knowledge base, LLM gateway, chat orchestration, analytics backend, frontend foundation, public website, booking wizard and portal, staff and admin console, analytics dashboard and the chat widget. Phase 17 (testing, security hardening and performance) is in progress.
+Phases 1 to 16 and 18 are complete: foundations, database, authentication, booking, billing, notifications, knowledge base, LLM gateway, chat orchestration, analytics backend, frontend foundation, public website, booking wizard and portal, staff and admin console, analytics dashboard and the chat widget, and the production deployment with demo data, runbook and demo script. Phase 17 (testing, security hardening and performance) is partly done and still open.
 
 ## Conventions
 

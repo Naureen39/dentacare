@@ -1,0 +1,135 @@
+# Production overlay. Use it together with compose.yaml:
+#
+#   docker compose -f compose.yaml -f compose.prod.yaml up -d --build
+#
+# What changes compared with development:
+#   * the API runs under Gunicorn (the image's default command), with no source mounted and no
+#     published port; Caddy is the only public entry point (ports 80 and 443, automatic TLS)
+#   * migrations always run on start; the demo data is loaded when SEED_DEMO=1
+#   * the worker starts after the API is healthy, so it never sees an unmigrated database
+#   * the Vite dev server is not started, and Mailpit stays on the loopback address only
+#   * the database keeps its volume, Redis keeps nothing on disk (cache and queue only)
+#   * every service has a memory limit, a restart policy and rotated logs
+#
+# Required in .env: POSTGRES_PASSWORD, JWT_SECRET, FIELD_ENCRYPTION_KEY, SITE_ADDRESS.
+
+x-prod-logging: &prod-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  db:
+    ports: !reset []
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+    logging: *prod-logging
+
+  redis:
+    # No snapshots and no append file (set in compose.yaml). The memory cap keeps a runaway cache
+    # from taking the host down; Redis refuses writes beyond it rather than evicting queued jobs.
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "200mb"]
+    ports: !reset []
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+    logging: *prod-logging
+
+  mailpit:
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+    logging: *prod-logging
+
+  api:
+    command: !reset null
+    volumes: !override
+      - ./data:/data:ro
+      - model_cache:/models
+    ports: !reset []
+    environment:
+      ENV: production
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-meridian}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-meridian}
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?set FIELD_ENCRYPTION_KEY in .env}
+      PUBLIC_BASE_URL: https://${SITE_ADDRESS:?set SITE_ADDRESS in .env}
+      CORS_ORIGINS: https://${SITE_ADDRESS}
+      # The API is reachable only from the Caddy container on the private network, so the
+      # forwarded client address can be trusted from any peer. Without this every visitor would
+      # share one rate limit bucket (the proxy's address).
+      FORWARDED_ALLOW_IPS: "*"
+      RUN_MIGRATIONS: "1"
+      SEED_DEMO: ${SEED_DEMO:-0}
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      # The first start migrates, seeds 24 months of data and downloads the embedding model.
+      start_period: 900s
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+    logging: *prod-logging
+
+  worker:
+    volumes: !override
+      - model_cache:/models
+    environment:
+      ENV: production
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-meridian}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-meridian}
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?set FIELD_ENCRYPTION_KEY in .env}
+      PUBLIC_BASE_URL: https://${SITE_ADDRESS}
+    depends_on: !override
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+    logging: *prod-logging
+
+  web:
+    # The development server is replaced by the static build that Caddy serves.
+    profiles: ["development"]
+
+  backup:
+    profiles: !reset []
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+    logging: *prod-logging
+
+  caddy:
+    profiles: !reset []
+    ports: !override
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    depends_on: !override
+      api:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+    logging: *prod-logging

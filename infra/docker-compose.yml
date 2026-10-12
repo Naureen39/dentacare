@@ -142,6 +142,30 @@ services:
       - api
     logging: *logging
 
+  # Nightly database backup. Start with `docker compose --profile production up -d backup`.
+  # Restore check: docker compose run --rm backup /scripts/restore_test.sh
+  backup:
+    profiles: ["production"]
+    image: postgres:16-alpine
+    restart: unless-stopped
+    command: ["/scripts/schedule.sh"]
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER:-meridian}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-meridian}
+      PGDATABASE: ${POSTGRES_DB:-meridian}
+      BACKUP_DIR: /backups
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+      BACKUP_HOUR: ${BACKUP_HOUR:-02}
+      BACKUP_MINUTE: ${BACKUP_MINUTE:-30}
+    volumes:
+      - ./backup:/scripts:ro
+      - backups:/backups
+    depends_on:
+      db:
+        condition: service_healthy
+    logging: *logging
+
   caddy:
     profiles: ["production"]
     build:
@@ -163,6 +187,7 @@ services:
 
 volumes:
   pgdata:
+  backups:
   model_cache:
   web_node_modules:
   caddy_data:

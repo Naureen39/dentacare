@@ -10,7 +10,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY --from=ghcr.io/astral-sh/uv:0.12 /uv /usr/local/bin/uv
 
 # LightGBM needs the OpenMP runtime, which the slim image does not include.
-RUN apt-get update \n    && apt-get install -y --no-install-recommends libgomp1 \n    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -28,5 +30,7 @@ EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"
+
+ENTRYPOINT ["/bin/sh", "/app/docker-entrypoint.sh"]
 
 CMD ["gunicorn", "app.main:app", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "-w", "2"]
