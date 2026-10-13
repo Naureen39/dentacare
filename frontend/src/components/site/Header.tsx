@@ -23,7 +23,10 @@ const link =
 export function TopBar() {
   const weekdays = hours[0]
   return (
-    <div className="hidden bg-primary text-sm text-primary-foreground md:block">
+    <aside
+      aria-label="Contact and opening hours"
+      className="hidden bg-primary text-sm text-primary-foreground md:block"
+    >
       <div className="container-page flex items-center justify-between gap-4 py-2">
         <ul className="flex flex-wrap items-center gap-x-6 gap-y-1">
           <li>
@@ -50,7 +53,7 @@ export function TopBar() {
           Patient login
         </Link>
       </div>
-    </div>
+    </aside>
   )
 }
 

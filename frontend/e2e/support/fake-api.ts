@@ -1,11 +1,13 @@
 import type { Page, Route } from '@playwright/test'
 
+import { clinicDay, handleStaff } from './staff-api'
+
 /**
  * A small stand in for the clinic's API, kept in memory for one test. It answers the calls the
  * booking wizard and the patient portal make, and can be told to misbehave in the ways the tests
  * need: a time that is taken, and a wrong email code.
  */
-const ROUTINE = {
+export const ROUTINE = {
   id: '00000000-0000-4000-8000-000000000002',
   code: 'SV02',
   name: 'Routine Exam and Cleaning',
@@ -14,7 +16,7 @@ const ROUTINE = {
   duration_min: 45,
   base_price: '120.00',
 }
-const DENTISTS = [
+export const DENTISTS = [
   {
     id: '10000000-0000-4000-8000-000000000001',
     full_name: 'Dr. Priya Raman',
@@ -68,6 +70,15 @@ export interface Appointment {
 }
 
 export class FakeApi {
+  /** Who is signed in. The sign in address decides: receptionist@, dentist@, admin@ or a patient. */
+  role = 'patient'
+  /** The clinic's date for the schedule. Visual tests fix it. */
+  today = clinicDay()
+  email = PATIENT.email
+  /** Status changes made from the console, by appointment id. */
+  statusChanges: { id: string; status: string }[] = []
+  /** Clinical notes saved by the dentist. */
+  notes: string[] = []
   /** The next hold request is refused as "just taken", with these other times offered. */
   conflictOnNextHold = false
   holds = 0
@@ -130,11 +141,11 @@ export class FakeApi {
     return days
   }
 
-  private json(route: Route, body: unknown, status = 200) {
+  json(route: Route, body: unknown, status = 200) {
     return route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) })
   }
 
-  private error(route: Route, status: number, code: string, message: string, details?: unknown) {
+  error(route: Route, status: number, code: string, message: string, details?: unknown) {
     return this.json(route, { code, message, details }, status)
   }
 
@@ -225,6 +236,10 @@ export class FakeApi {
         return this.book(route, body)
       }
       case 'POST /auth/login':
+        this.email = String(body.email)
+        this.role =
+          ['receptionist', 'dentist', 'admin'].find((r) => this.email.startsWith(`${r}@`)) ??
+          'patient'
         return this.json(route, {
           status: 'authenticated',
           access_token: 'token-1',
@@ -237,11 +252,11 @@ export class FakeApi {
       case 'GET /auth/me':
         return this.json(route, {
           id: '11111111-1111-4111-8111-111111111111',
-          email: PATIENT.email,
-          role: 'patient',
-          mfa_enabled: false,
+          email: this.email,
+          role: this.role,
+          mfa_enabled: this.role !== 'patient',
           email_verified: true,
-          patient_id: PATIENT.id,
+          patient_id: this.role === 'patient' ? PATIENT.id : null,
         })
       case 'GET /me':
         return this.json(route, PATIENT)
@@ -286,6 +301,7 @@ export class FakeApi {
       found.status = 'cancelled'
       return this.json(route, found)
     }
+    if (await handleStaff(this, route, method, path, url, body)) return
     return this.error(route, 404, 'not_found', `Unexpected request: ${key}`)
   }
 

@@ -146,7 +146,7 @@ export function ChartCard({
         </div>
       )}
 
-      <div id={`${id}-table`} className={cn('mt-4 overflow-x-auto', !showTable && 'sr-only')}>
+      <div id={`${id}-table`} className={showTable ? 'mt-4 overflow-x-auto' : 'sr-only'}>
         <table className="w-full text-sm">
           <caption className="sr-only">{title}</caption>
           <thead>

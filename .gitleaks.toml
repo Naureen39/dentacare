@@ -13,6 +13,11 @@ paths = [
   '''backend/tests/auth/test_sessions\.py''',
 ]
 
+# The demo script tells the presenter to set a deliberately wrong key to show provider failover.
+[[allowlists]]
+description = "Placeholder value in the demo script"
+regexes = ['''GROQ_API_KEY=invalid''']
+
 # Folders that are not part of the repository (git ignores them) but are on disk when the working
 # tree is scanned without git history.
 [[allowlists]]
