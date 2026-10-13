@@ -345,7 +345,7 @@ compose.prod.yaml    production overlay
 
 ## Project status
 
-Phases 1 to 16 and 18 are complete: foundations, database, authentication, booking, billing, notifications, knowledge base, LLM gateway, chat orchestration, analytics backend, frontend foundation, public website, booking wizard and portal, staff and admin console, analytics dashboard and the chat widget, and the production deployment with demo data, runbook and demo script. Phase 17 (testing, security hardening and performance) is partly done and still open.
+Phases 1 to 16 and 18 are complete: foundations, database, authentication, booking, billing, notifications, knowledge base, LLM gateway, chat orchestration, analytics backend, frontend foundation, public website, booking wizard and portal, staff and admin console, analytics dashboard and the chat widget, and the production deployment with demo data, runbook and demo script. Phase 17 (testing, security hardening and performance) is mostly done: the automated test, scan and accessibility gates pass, while the load test targets and the written security review are still open.
 
 ## Conventions
 
