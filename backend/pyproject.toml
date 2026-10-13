@@ -55,6 +55,8 @@ dev = [
     "types-pyyaml>=6.0.12.20260906",
     "types-dateparser>=1.4.3.20260907",
     "pandas-stubs>=3.0.5.260914",
+    "jsonschema>=4.26.0",
+    "openapi-spec-validator>=0.9.0",
 ]
 
 [tool.uv]
@@ -104,3 +106,5 @@ pythonpath = ["."]
 
 [tool.coverage.run]
 source = ["app"]
+# SQLAlchemy runs async code inside greenlets, which the default tracer does not follow.
+concurrency = ["greenlet", "thread"]

@@ -34,6 +34,7 @@ class Invoice(Base):
         CheckConstraint("discount <= subtotal", name="discount_within_subtotal"),
         CheckConstraint("total = subtotal - discount + tax", name="total_matches_components"),
         CheckConstraint("insurance_expected >= 0", name="insurance_non_negative"),
+        Index("ix_invoices_appointment_id", "appointment_id"),
         CheckConstraint("insurance_expected <= total", name="insurance_within_total"),
         CheckConstraint(
             "discount = 0 OR discount_reason IS NOT NULL", name="discount_needs_reason"

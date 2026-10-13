@@ -1,5 +1,6 @@
 """The staff and admin console: who may call what, and what the new endpoints do."""
 
+import copy
 import re
 from datetime import UTC, datetime, timedelta
 
@@ -442,6 +443,7 @@ async def test_settings_are_read_changed_and_checked(practice: Practice) -> None
     admin = await headers_for(practice, UserRole.ADMIN)
     client = practice.ctx.client
     current = (await client.get(f"{API}/admin/settings", headers=admin)).json()
+    original = copy.deepcopy({k: current[k] for k in ("booking", "reminders", "billing")})
     assert current["booking"]["cancellation_free_hours"] == 24
     assert current["clinic"]["timezone"] == "America/New_York"
     current["booking"]["cancellation_free_hours"] = 48
@@ -464,6 +466,9 @@ async def test_settings_are_read_changed_and_checked(practice: Practice) -> None
     assert refused.status_code == 422
     unknown = await client.put(f"{API}/admin/settings", headers=admin, json={"clinic": {}})
     assert unknown.status_code == 422
+    # app_settings is kept between tests, so put the values back for the tests that follow.
+    restored = await client.put(f"{API}/admin/settings", headers=admin, json=original)
+    assert restored.status_code == 200, restored.text
 
 
 async def test_audit_export_neutralises_spreadsheet_formulas(practice: Practice) -> None:

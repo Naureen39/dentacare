@@ -56,6 +56,7 @@ class Appointment(Base):
         Index("ix_appointments_dentist_slot_start", "dentist_id", text("lower(slot)")),
         Index("ix_appointments_patient_id", "patient_id"),
         Index("ix_appointments_status", "status"),
+        Index("ix_appointments_slot_gist", "slot", postgresql_using="gist"),
     )
 
     id: Mapped[uuid.UUID] = uuid_pk()

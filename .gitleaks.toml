@@ -1,0 +1,26 @@
+title = "Meridian Dental Care secret scan"
+
+[extend]
+useDefault = true
+
+# The tests sign in with a fixed password and sign tokens with a fixed key. They are values made up
+# for the test databases and protect nothing, so the scanner is told to leave these two files
+# alone. Anything else that looks like a secret is still reported.
+[[allowlists]]
+description = "Fixed values used only by the automated tests"
+paths = [
+  '''backend/tests/auth/conftest\.py''',
+  '''backend/tests/auth/test_sessions\.py''',
+]
+
+# Folders that are not part of the repository (git ignores them) but are on disk when the working
+# tree is scanned without git history.
+[[allowlists]]
+description = "Installed packages and build output"
+paths = [
+  '''(^|/)node_modules/''',
+  '''(^|/)\.venv/''',
+  '''(^|/)dist(-audit|-server)?/''',
+  '''(^|/)test-results/''',
+  '''backend/models/''',
+]
